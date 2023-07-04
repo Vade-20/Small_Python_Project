@@ -22,7 +22,7 @@ def check_common_bdays(birthday:int):
     
 def start(bday):
     c = 0
-    print("Counting Duplicates")
+    print("Running Simulation")
     for _ in tqdm(range(100_000)):
         if check_common_bdays(bday):
             c+=1
@@ -34,10 +34,10 @@ if __name__=='__main__':
     print('Birthday Paradox \n'.upper())
     choice = 'y'
     while choice.lower().startswith('y'):  
-        bday = int(input('Please enter number of birthday your want to find percentage:'))     
+        bday = int(input('Enter number of people for finding probability of common birthday: '))     
         while not (str(bday)).isdigit() or bday>100:
             print('Please enter an integer less than 100')
-            bday = int(input('Please enter number of birthday your want to find percentage:'))
+            bday = int(input('Enter number of people for finding probability of common birthday: '))
         ans = start(bday)
         print(f'In a group of {bday} individuals, the probability of having a common birthday is {ans}.')
         choice = input('Would you like to try again? (Y/N) ')

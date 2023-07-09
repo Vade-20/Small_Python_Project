@@ -157,11 +157,15 @@ class Player(Members):
         printing_format()
           
     def Yield(self):
-        global player,bet
-        print('You surrendered,half of the bet bet money is taken away')
+        global player,bet,ch
+        bet = int(bet)
+        print('\n')
+        print('You surrendered,half of the bet money is taken away')
         player.total_money -= int(bet/2)
-        bet = 0
-        print('Bet: ',bet,'\n')
+        print('Bet : ',bet)
+        print('Money Left: ',player.total_money)
+        input('Press Enter to continue:')
+        
     
     
     
@@ -190,7 +194,7 @@ if input('Do you want to read the rules (Y/N)? ').lower().startswith('y'):
     rules()
 
 player = Player(random_card(),random_card())
-choice_dict = {'s':player.standing,'h':player.Hit,'d':player.Double_Down,'su':player.Yield}
+choice_dict = {'s':player.standing,'h':player.Hit,'d':player.Double_Down,'y':player.Yield}
 
 print('\n')    
 while player.total_money>0: 
@@ -219,7 +223,12 @@ while player.total_money>0:
             break
         
         if ch!='s':
-            choice_dict.get(ch)()  
+            choice_dict.get(ch)()
+            
+        if ch=='y':
+            player.new_cards()
+            player.totaling()
+            break  
         
         if player.cards_total>21:
             print('You lose!! you went over 21')

@@ -1,4 +1,4 @@
-from random import choice       
+from random import choice      
         
 def rules():
     rule = '''The Rules of \033[1m BlackJack \033[0m are:
@@ -198,6 +198,7 @@ choice_dict = {'s':player.standing,'h':player.Hit,'d':player.Double_Down,'y':pla
 
 print('\n')    
 while player.total_money>0: 
+    print("Money Left:",player.total_money)
     
     while True:
         bet = input(f'How much do you want to bet?(1-{player.total_money}) or QUIT : ')    
@@ -210,7 +211,6 @@ while player.total_money>0:
         elif int(bet) not in range(1,player.total_money+1):
                 continue    
         break
-
     print('Bet: ',bet,'\n')
     dealer = Dealer(random_card())
     printing_format()

@@ -245,8 +245,3 @@ while player.total_money>0:
             break
 else:
     print('You ran out of your fake money')
-        
-        
-        
-
-        

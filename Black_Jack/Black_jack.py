@@ -4,7 +4,7 @@ def rules():
     rule = '''The Rules of \033[1m BlackJack \033[0m are:
     \033[1m 1. \033[0m The main objective of blackjack is \033[1m Beat The Dealer \033[0m but here the objective is to \033[1m Beat the Computer \033[0m
     \033[1m 2.  How do you beat the dealer?\033[0m 
-            1.) By drawing a hand value that is higher than the dealer’s hand value
+            1.) By drawing a hand value that is higher than the dealer's hand value
             2.) By the dealer drawing a hand value that goes over 21.
             3.) By drawing a hand value of 21 on your first two cards, when the dealer does not. This is called Black Jack
     \033[1m 3. How do you lose to the dealer?\033[0m
@@ -24,7 +24,7 @@ def rules():
             \033[1m 3.) Double Down \033[0m :  If you have a hand total that is advantageous to you but you need to 
                 take an additional card you can double your initial wager and the dealer will deal you only 1 additional card. 
                 You cant take more cards after Doubling Down
-            \033[1m 4.) Yield \033[0m: If you don’t like your initial hand, you have the option of giving it up in exchange for half 
+            \033[1m 4.) Yield \033[0m: If you don't like your initial hand, you have the option of giving it up in exchange for half 
                     your original bet back.
     \033[1m 7. \033[0m If  the dealer hand's total is 17 or more, it must stand. If the total is 16 or under, then they must take a card. 
             The dealer must continue to take cards until the total is 17 or more, at which point the dealer must stand.
@@ -58,9 +58,7 @@ class Members:
         while num_of_a>0 and self.cards_total>21:
             self.cards_total-=10
             num_of_a-=1
-            
-        
-      
+              
     def printing_cards(self):
         cards = self.cards
         size = len(cards)
@@ -80,8 +78,7 @@ class Members:
             else:
                 print(f'|__{cards[i][0]}|\t',end='')
         print()
-     
-        
+          
     def add_card(self):
         card = random_card()
         print(f'takes {card[0]} of {card[1]} from the deck')
@@ -104,6 +101,7 @@ class Dealer(Members):
         print('Dealer',end=' ')
         super().add_card()
         Dealer.dealer_card=self.cards_total
+    
     
 class Player(Members):
     total_money = 10_000
@@ -137,17 +135,21 @@ class Player(Members):
             print("It's a Tie")
         print('\n')
      
-    def Hit(self,*useless):
+    def Hit(self):
         player.add_card()
         printing_format()
     
-    def Double_Down(self,*uselss):
+    def Double_Down(self):
         global bet,player,ch
         bet = int(bet)
         upper_rand = bet if self.cards_total<bet else self.cards_total
-        more_bet = input(f'How much more do you want to bet (1-{upper_rand}): ')
-        while more_bet not in [str(i) for i in range(1,upper_rand+1)]:
+        
+        while True:
             more_bet = input(f'How much more do you want to bet (1-{upper_rand}): ')
+            if more_bet not in [str(i) for i in range(1,upper_rand+1)]:
+                continue
+            break
+        
         player.add_card()
         player.totaling()
         bet = str(bet + int(more_bet))
@@ -156,12 +158,13 @@ class Player(Members):
           
     def Yield(self):
         global player,bet
-        
-        print('You surrender half of the bet bet money is taken away')
+        print('You surrendered,half of the bet bet money is taken away')
         player.total_money -= int(bet/2)
         bet = 0
+        print('Bet: ',bet,'\n')
     
-
+    
+    
 def random_card():
     deck_of_cards = [('A', '♥'),(2, '♥'),(3, '♥'),(4, '♥'),(5, '♥'),(6, '♥'),(7, '♥'),(8, '♥'),(9, '♥'),(10, '♥'),('J', '♥'),('Q', '♥'),('K', '♥'),
                     ('A', '♦'),(2, '♦'),(3, '♦'),(4, '♦'),(5, '♦'),(6, '♦'),(7, '♦'),(8, '♦'),(9, '♦'),(10, '♦'),('J', '♦'),('Q', '♦'),('K', '♦'),
@@ -171,6 +174,7 @@ def random_card():
     value = choice(deck_of_cards)
     deck_of_cards.remove(value) 
     return value
+
 
 def printing_format():
         print('Dealer:',dealer.dealer_card)
@@ -190,27 +194,32 @@ choice_dict = {'s':player.standing,'h':player.Hit,'d':player.Double_Down,'su':pl
 
 print('\n')    
 while player.total_money>0: 
-    bet = input(f'How much do you want to bet?(1-{player.total_money}) or QUIT : ')
-    while not bet.isdigit() and not bet.lower().startswith('q') :
+    
+    while True:
         bet = input(f'How much do you want to bet?(1-{player.total_money}) or QUIT : ')    
-    if bet.lower().startswith('q'):
-        print('Thank For Playing')
-        print(f'Your end total is {player.total_money}')
-        quit()
-    else:
-        while int(bet) not in range(1,player.total_money+1):
-            bet = input(f'How much do you want to bet?(1-{player.total_money}) or QUIT : ')    
+        if not bet.isdigit() and not bet.lower().startswith('q') :
+            continue
+        elif bet.lower().startswith('q'):
+            print('Thank For Playing')
+            print(f'Your end total is {player.total_money}')
+            quit()
+        elif int(bet) not in range(1,player.total_money+1):
+                continue    
+        break
 
     print('Bet: ',bet,'\n')
-    
     dealer = Dealer(random_card())
     printing_format()
+    
     while True:
-        ch = input('(H)it, (S)tand, (D)ouble down, (Y)ield : ').lower()[0]
-        while ch not in ['h','d','s','y']:
+        while True:
             ch = input('(H)it, (S)tand, (D)ouble down, (Y)ield : ').lower()[0]
+            if ch not in ['h','d','s','y']:
+                continue
+            break
+        
         if ch!='s':
-            choice_dict.get(ch)(dealer,int(bet))  
+            choice_dict.get(ch)()  
         
         if player.cards_total>21:
             print('You lose!! you went over 21')
@@ -225,8 +234,8 @@ while player.total_money>0:
             player.new_cards()
             player.totaling()
             break
-    else:
-        print('You ran out of your fake money')
+else:
+    print('You ran out of your fake money')
         
         
         

@@ -1,4 +1,4 @@
-from random import choice      
+from random import choice,shuffle    
         
 def rules():
     rule = '''The Rules of \033[1m BlackJack \033[0m are:
@@ -132,7 +132,7 @@ class Player(Members):
             print("You Win!!")
             player.total_money+=bet
         elif self.cards_total==dealer.cards_total:
-            print("It's a Tie")
+            print('It\'s a tie, the bet is returned to you.')
         print('\n')
      
     def Hit(self):
@@ -175,9 +175,8 @@ def random_card():
                     ('A', '♠'),(2, '♠'),(3, '♠'),(4, '♠'),(5, '♠'),(6, '♠'),(7, '♠'),(8, '♠'),(9, '♠'),(10, '♠'),('J', '♠'),('Q', '♠'),('K', '♠'),
                     ('A', '♣'),(2, '♣'),(3, '♣'),(4, '♣'),(5, '♣'),(6, '♣'),(7, '♣'),(8, '♣'),(9, '♣'),(10, '♣'),('J', '♣'),('Q', '♣'),('K', '♣')]*8
     
-    value = choice(deck_of_cards)
-    deck_of_cards.remove(value) 
-    return value
+    shuffle(deck_of_cards)
+    return deck_of_cards.pop()
 
 
 def printing_format():
@@ -198,6 +197,7 @@ choice_dict = {'s':player.standing,'h':player.Hit,'d':player.Double_Down,'y':pla
 
 print('\n')    
 while player.total_money>0: 
+    dealer = Dealer(random_card())
     print("Money Left:",player.total_money)
     
     while True:
@@ -211,8 +211,16 @@ while player.total_money>0:
         elif int(bet) not in range(1,player.total_money+1):
                 continue    
         break
+    
+    if player.cards_total==21:
+        print(r"It's a BlackJack,if you win you will get 150% of your bet")
+        bet = int(bet)+int(int(bet)/2)
+        choice_dict.get('s')(dealer,bet)  
+        player.new_cards()
+        player.totaling()
+        continue       
+        
     print('Bet: ',bet,'\n')
-    dealer = Dealer(random_card())
     printing_format()
     
     while True:
@@ -233,7 +241,6 @@ while player.total_money>0:
         if player.cards_total>21:
             print('You lose!! you went over 21')
             player.total_money-=int(bet)
-            print(player.total_money)
             player.new_cards()
             player.totaling()
             break

@@ -49,8 +49,9 @@ if __name__=='__main__':
         if not num.isdigit():
             print('Please enter a digit')
             continue
-        elif int(num)<0:
-            print('Please enter the number between 0-25')
+        elif int(num) not in range(1,27):
+            print('Please enter the number between 1-26')
+            continue           
         num = int(num)
         break
     text = input('Please enter the message here: ')

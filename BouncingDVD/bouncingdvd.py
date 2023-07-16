@@ -2,6 +2,7 @@ from tkinter import *
 from random import randint
 colours = ['red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white']
 root = Tk()
+root.title("DVD")
 canvas_size_x = 1000
 canvas_size_y = 500
 x_corr=2

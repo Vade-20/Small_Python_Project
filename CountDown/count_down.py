@@ -35,6 +35,8 @@ def correct_time():
 @wrapper
 def main(stdscr):
   curses.curs_set(0)
+  curses.init_pair(1,curses.COLOR_YELLOW,curses.COLOR_BLACK)
+  YELLOW_BLACK = curses.color_pair(1)
   n = correct_time()
   hours = n.hour
   minutes = n.minute
@@ -54,7 +56,7 @@ def main(stdscr):
       i = int(i) if i.isdigit() else i
       cur_win = curses.newwin(10,20,10,a+10)
       num = number_patterns.get(i)
-      cur_win.addstr(num)
+      cur_win.addstr(num,YELLOW_BLACK)
       a +=10
       cur_win.refresh()
     seconds -= 1

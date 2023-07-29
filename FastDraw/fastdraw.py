@@ -15,15 +15,16 @@ But you lose if you press Enter before "DRAW" appears.''')
         start_time = time.time()
         ans = input()
         end_time = time.time()
-        time_taken = round(end_time-start_time-rand,4)
-        if time_taken<0.15:
-            print('You Lose.You press Enter too early')
+        time_taken = round(end_time-start_time,4)
+        if time_taken<0.01:
+            print('You drew before "DRAW" appeared! You lose.')
         elif time_taken<0.3:
             print(f'You took {time_taken} seconds to draw')
             print('You are the fastest draw in the west! You win!')
         else:
             print(f'You took {time_taken} seconds to draw. Too slow!')    
         if input('\nEnter (Q)UIT to stop, or press Enter to play again.').lower().startswith('q'):
+            print('Thank for Playing')
             break
 
 main()

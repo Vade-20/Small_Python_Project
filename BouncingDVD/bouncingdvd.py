@@ -25,7 +25,7 @@ def moves():
     elif int(x)<50:
         choice = choice + 1 if choice <6 else 0
         canvas.itemconfig(dvd, fill=colours[choice])
-        x_corr=2
+        x_corr=+2
         
     if int(y)>480:
         choice = choice + 1 if choice <6 else 0
@@ -34,7 +34,7 @@ def moves():
     elif int(y)<20:
         choice = choice + 1 if choice <6 else 0
         canvas.itemconfig(dvd, fill=colours[choice])
-        y_corr=2
+        y_corr=+2
         
     canvas.move(dvd,x_corr,y_corr)
     return root.after(10,moves)

@@ -10,5 +10,5 @@ This is a Python script that creates a simple DVD screensaver animation using th
 
 - Python 3.x
 - Tkinter library
--curses (window-curses for window user)
+- curses (window-curses for window user)
 

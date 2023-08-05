@@ -24,7 +24,7 @@ But you lose if you press Enter before "DRAW" appears.''')
         else:
             print(f'You took {time_taken} seconds to draw. Too slow!')    
         if input('\nEnter (Q)UIT to stop, or press Enter to play again.').lower().startswith('q'):
-            print('Thank for Playing')
+            print('Thank you for Playing')
             break
 
 main()

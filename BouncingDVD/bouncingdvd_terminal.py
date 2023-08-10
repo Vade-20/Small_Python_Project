@@ -11,6 +11,7 @@ def get_colours(a):
         curses.init_pair(5, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
         curses.init_pair(6, curses.COLOR_CYAN, curses.COLOR_BLACK)
         return curses.color_pair(a)
+
 @wrapper
 def main(stdsrc):
         curses.curs_set(0)

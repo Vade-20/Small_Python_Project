@@ -1,7 +1,6 @@
 from random import randint
 import curses
 from curses import wrapper
-from curses.textpad import Textbox,rectangle
 
 boxes = {
 'red_box_close' : ''' 

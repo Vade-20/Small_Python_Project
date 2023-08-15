@@ -4,6 +4,8 @@ import os
 terminal_size = os.get_terminal_size()
 sign = 1
 spaces = 0
+speed = 0.01
+
 color_codes = {
     1: "\033[31m",           #red
     2: "\033[38;5;208m",     #orange
@@ -47,7 +49,7 @@ while True:
             sign = -1
         elif spaces==0:
             sign = 1
-        sleep(0.01)
+        sleep(speed)
     except KeyboardInterrupt:
         print('\n')
         final_msg = ''

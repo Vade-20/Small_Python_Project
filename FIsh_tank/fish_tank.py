@@ -124,8 +124,11 @@ def tank(stdsrc):
         x_pov = random.randint(5,99)
         sea_weeds[i] = (curses.newwin(size,1,29-size,x_pov),size-1)
     while True:
-        get_fish(stdsrc)
-        seaweed(sea_weeds)
-        ground()
-        bubles(stdsrc)
-        time.sleep(0.1)
+        try:
+            get_fish(stdsrc)
+            seaweed(sea_weeds)
+            ground()
+            bubles(stdsrc)
+            time.sleep(0.5)
+        except KeyboardInterrupt:
+            break

@@ -67,7 +67,7 @@ def main(stdsrc):
     stdsrc.refresh()
     width = curses.COLS
     if width<98:
-        raise Exception ('Please increase the width of your terminal')
+        raise Exception ('Press increase the width of your terminal')
     curses.echo()
     
     curses.init_pair(1,curses.COLOR_RED,curses.COLOR_BLACK)
@@ -139,7 +139,7 @@ def main(stdsrc):
     rule_box.addstr(f'\n  {player_1}, say one of the following sentences to {player_2}',GREEN)
     rule_box.addstr(f'\n        1) There is a carrot in my box.',GREEN)
     rule_box.addstr(f'\n        2) There is not a carrot in my box.',GREEN)
-    rule_box.addstr(f'\n  Please Enter to continue....',GREEN)
+    rule_box.addstr(f'\n  Press Enter to continue....',GREEN)
     rule_box.border()
     rule_box.refresh()
     rule_box.getch()
@@ -167,7 +167,7 @@ def main(stdsrc):
         rule_box.refresh()
         
     elif ans[0] != 'y' and rand!=1:
-        rule_box.addstr(f'  Press Enter to reveal the winner....')
+        rule_box.addstr(f'  Press Enter to reveal the winner....',GREEN)
         rule_box.border()
         rule_box.refresh()
         rule_box.getch()

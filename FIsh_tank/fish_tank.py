@@ -25,8 +25,7 @@ def get_colours(col_num):
     curses.init_pair(3, curses.COLOR_BLUE, curses.COLOR_BLACK)
     curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(5, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
-    curses.init_pair(6, curses.COLOR_CYAN, curses.COLOR_BLACK)
-    curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(6, curses.COLOR_WHITE, curses.COLOR_BLACK)
     return curses.color_pair(col_num)
 
 num_of_bubles = 7 # number of bubles
@@ -34,7 +33,7 @@ bub_pos = [[random.randint(0,110),random.randint(15,28)] for i in range(num_of_b
 num_of_seaweeds = 4 # number of seaweed 
 num_of_fishes = 7 # number of fishes
 fishes_pov = [[random.randint(0,110),random.randint(2,28),random.choice([True,False]),random.randint(3,35),random.choice(FISH_TYPES),
-               random.choice([[random.randint(1,7),random.randint(1,7)],[random.randint(1,7)]])] for i in range(num_of_fishes)]
+               random.choice([[random.randint(1,6),random.randint(1,6)],[random.randint(1,6)]])] for i in range(num_of_fishes)]
 
 def seaweed(sea_weeds):
     for seaweed in sea_weeds:
@@ -116,6 +115,7 @@ def tank(stdsrc):
     global seaweeds
     curses.curs_set(0)
     stdsrc.clear()
+    stdsrc.bkgd(' ',get_colours(3))
     stdsrc.refresh()
     sea_weeds = {}
     

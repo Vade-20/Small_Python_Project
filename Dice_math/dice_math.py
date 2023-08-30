@@ -75,9 +75,14 @@ def random_dices():
                 dices.append(rand[0])
         return (dices, total)
 
-                
-def main(stdsrc):
-    sleep(5)
+def dice_position(x,y,position):
+        if x in range(position[0]-9,position[2]+9) or y in range(position[1]-5,position[3]+5):
+                return False
+        else:
+                return True
+        
+def main(stdsrc):  
+    global positions    
     curses.init_pair(1,curses.COLOR_GREEN,curses.COLOR_BLACK)
     GREEN = curses.color_pair(1)
     stdsrc.clear()
@@ -91,16 +96,34 @@ def main(stdsrc):
     stdsrc.getch()
     stdsrc.clear()
     stdsrc.refresh()
+    while True:
+        dices,sum_total = random_dices()
+        positions = []
+        for i in dices:
+                while True:
+                        x,y = randint(0,110),randint(0,24)
+                        if all([dice_position(x,y,i) for i in positions]):
+                                break            
+                for j in i:
+                        stdsrc.addstr(y,x,j)
+                        y+=1
+                positions.append((x,y,x+9,y+5)) #(topleft,bottomright)
+                        
+        stdsrc.refresh()
+        stdsrc.getch()
+        stdsrc.clear()
+        stdsrc.refresh()
+        print('-'*100)
+        
 
 
 if __name__ == '__main__':
-        process = Process(target=wrapper(main))
+        process = Process(target=wrapper,args=(main,))
         process.start()
-        process.join(timeout=1)
+        process.join(timeout=10)
 
         if process.is_alive():
                 print("Process took too long, terminating...")
-                quit()
                 process.terminate()
                 process.join()
         else:

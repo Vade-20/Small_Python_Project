@@ -1,8 +1,9 @@
-from multiprocessing import Process
+from multiprocessing import Process, Value
 import curses
 from curses import wrapper
 from random import randint,choice
 from time import sleep
+
 D1 = (['+-------+',
        '|       |',
        '|   O   |',
@@ -76,13 +77,14 @@ def random_dices():
         return (dices, total)
 
 def dice_position(x,y,position):
-        if x in range(position[0]-9,position[2]+9) or y in range(position[1]-5,position[3]+5):
+        if x in range(position[0]-15,position[2]+15) and y in range(position[1]-11,position[3]+11):
+
                 return False
         else:
                 return True
         
-def main(stdsrc):  
-    global positions    
+def main(stdsrc,total_question,correct_answer,incorrect_answer,score):
+    curses.echo()
     curses.init_pair(1,curses.COLOR_GREEN,curses.COLOR_BLACK)
     GREEN = curses.color_pair(1)
     stdsrc.clear()
@@ -99,31 +101,54 @@ def main(stdsrc):
     while True:
         dices,sum_total = random_dices()
         positions = []
+        # below loop is for printing dices
         for i in dices:
                 while True:
-                        x,y = randint(0,110),randint(0,24)
-                        if all([dice_position(x,y,i) for i in positions]):
-                                break            
+                        x,y = randint(0,110),randint(0,23) 
+                        for j in positions:
+                                if not dice_position(x,y,j):
+                                        useless = 1
+                                        break
+                        else:
+                                useless = 0
+                        if useless == 1 :
+                                continue
+                        else:
+                                break
                 for j in i:
                         stdsrc.addstr(y,x,j)
                         y+=1
                 positions.append((x,y,x+9,y+5)) #(topleft,bottomright)
-                        
+        stdsrc.addstr(29,3,'Enter the sum')
         stdsrc.refresh()
-        stdsrc.getch()
+        ans = stdsrc.getstr(29,18).decode(encoding='utf-8') 
+        total_question.value += 1
+        ans = int(ans) if ans.isdigit() else ans
+        if ans == sum_total:
+                correct_answer.value+=1
+                score.value += 4
+        else:
+                incorrect_answer.value+=1
+                score.value -=  1
         stdsrc.clear()
-        stdsrc.refresh()
-        print('-'*100)
-        
+        stdsrc.refresh()    
 
 
 if __name__ == '__main__':
-        process = Process(target=wrapper,args=(main,))
+        total_question = Value('i', 0)
+        correct_answer = Value('i', 0)
+        incorrect_answer = Value('i', 0)
+        score  = Value('i', 0)
+        process = Process(target=wrapper,args=(main,total_question,correct_answer,incorrect_answer,score))
         process.start()
-        process.join(timeout=10)
+        process.join(timeout=Duration_of_game+5)
 
         if process.is_alive():
-                print("Process took too long, terminating...")
+                print("Times up")
+                print('Total question answered :', total_question.value)
+                print('Correct answer :', correct_answer.value)
+                print('Incorrect answer :', incorrect_answer.value)
+                print('Score:', score.value)
                 process.terminate()
                 process.join()
         else:

@@ -1,7 +1,7 @@
 from multiprocessing import Process, Value
 import curses
 from curses import wrapper
-from random import randint,choice
+from random import randint,choice,shuffle
 from time import sleep
 
 D1 = (['+-------+',
@@ -58,7 +58,8 @@ D6b = (['+-------+',
         '| O O O |',
         '+-------+'], 6)
 
-All_dices = [D1, D2a, D2b, D3a, D3b, D4, D5, D6a, D6b]
+All_dices = [D1, D1, D2a, D2b, D3a, D3b, D4, D4, D5, D5, D6a, D6b]
+shuffle(All_dices)
 min_dices = 2
 max_dices = 6
 Duration_of_game = 30
@@ -144,12 +145,12 @@ if __name__ == '__main__':
         process.join(timeout=Duration_of_game+5)
 
         if process.is_alive():
+                process.terminate()
+                process.join()
                 print("Times up")
                 print('Total question answered :', total_question.value)
                 print('Correct answer :', correct_answer.value)
                 print('Incorrect answer :', incorrect_answer.value)
                 print('Score:', score.value)
-                process.terminate()
-                process.join()
-        else:
-                print("Process completed successfully.")
+                sleep(10) 
+                

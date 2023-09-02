@@ -1,3 +1,6 @@
+import sys
+sys.set_int_max_str_digits(0)
+
 while True:
     print('Enter the Nth Fibonacci number you wish to')
     print('calculate (such as 5, 50, 1000, 9999), or QUIT to quit:')

@@ -29,10 +29,10 @@ def get_colours(col_num):
     return curses.color_pair(col_num)
 
 num_of_bubles = 7 # number of bubles
-bub_pos = [[random.randint(0,110),random.randint(15,28)] for i in range(num_of_bubles)]
+bub_pos = [[random.randint(1,110),random.randint(15,28)] for i in range(num_of_bubles)]
 num_of_seaweeds = 4 # number of seaweed 
 num_of_fishes = 7 # number of fishes
-fishes_pov = [[random.randint(0,110),random.randint(2,28),random.choice([True,False]),random.randint(3,35),random.choice(FISH_TYPES),
+fishes_pov = [[random.randint(1,110),random.randint(2,28),random.choice([True,False]),random.randint(3,60),random.choice(FISH_TYPES),
                random.choice([[random.randint(1,6),random.randint(1,6)],[random.randint(1,6)]])] for i in range(num_of_fishes)]
 
 def seaweed(sea_weeds):
@@ -55,17 +55,17 @@ def bubles(stdsrc):
         stdsrc.refresh()
         if i[1]<8:
             stdsrc.addstr(i[1],i[0],' ')
-            i[0] = random.randint(0,110)
+            i[0] = random.randint(1,110)
             i[1] = 28     
      
 def ground():
-    ground = curses.newwin(2,120,28,0)
-    ground.addstr('░'*119+' '+'░'*119,get_colours(1))
+    ground = curses.newwin(2,119,28,1)
+    ground.addstr('░'*118+' '+'░'*118,get_colours(1))
     ground.refresh()
     
 def get_fish(stdsrc):
     stdsrc.clear()
-
+    stdsrc.border()
     for i in range(num_of_fishes):
         x_pos,y_pos,side,num_of_turn,fish,colour_option = fishes_pov[i]
         if side:
@@ -85,7 +85,7 @@ def get_fish(stdsrc):
         
         if y_pos>26:
             y_pos -= 2
-        elif y_pos<2:
+        elif y_pos<3:
             y_pos += 2
             
         if side:
@@ -95,7 +95,7 @@ def get_fish(stdsrc):
             else:
                 x_pos += 1
         else:
-            if x_pos<1:
+            if x_pos<2:
                 side = True
                 x_pos += 1
             else:
@@ -103,7 +103,7 @@ def get_fish(stdsrc):
                    
         if num_of_turn == 0:
             side = False if side else True
-            num_of_turn = random.randint(3,35)
+            num_of_turn = random.randint(3,60)
         else:
             num_of_turn -= 1
             
@@ -115,10 +115,9 @@ def tank(stdsrc):
     global seaweeds
     curses.curs_set(0)
     stdsrc.clear()
-    stdsrc.bkgd(' ',get_colours(3))
     stdsrc.refresh()
     sea_weeds = {}
-    
+    stdsrc.border()
     for i in range(num_of_seaweeds):
         size = random.randint(7,25)
         x_pov = random.randint(5,99)

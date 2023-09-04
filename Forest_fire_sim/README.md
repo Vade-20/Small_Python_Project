@@ -8,7 +8,7 @@ This Python program simulates the spread of fire in a forest using the curses li
 - **Lightning Chance**: This represents the likelihood of a tree catching fire due to lightning. You can adjust the lightning chance to control the frequency of trees catching fire.
 
 ## Requirements
--curses (window curses for window users)
+-curses (window-curses for window users)
 
 ## Customization
 You can customize the simulation by adjusting the following parameters in the code:

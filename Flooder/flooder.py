@@ -10,6 +10,7 @@ def get_colours(a):
         curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
         curses.init_pair(5, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
         curses.init_pair(6, curses.COLOR_CYAN, curses.COLOR_BLACK)
+        curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLACK)
         
         COLORS = {
         'Y' : curses.color_pair(1),
@@ -17,7 +18,8 @@ def get_colours(a):
         'B' : curses.color_pair(3),
         'G' : curses.color_pair(4),
         'P' : curses.color_pair(5),
-        'C' : curses.color_pair(6),}
+        'C' : curses.color_pair(6),
+        'W' : curses.color_pair(7),}
         return COLORS.get(a)
 
 BORDER_WIDTH = 30  # max width 115
@@ -44,33 +46,37 @@ def next_step(ans):
         left = (i[0],i[1]-1)
         direction = [up,down,right,left]
         for j in direction:
-            try:
-                if same_color_block.get(i) == blocks.get(j):
-                    if j not in same_color_block:
-                        same_color_block[j] = ans 
-                        return next_step(ans)
-            except IndexError:
-                continue
-        
+            if same_color_block.get(i) == blocks.get(j):
+                if j not in same_color_block:
+                    same_color_block[j] = ans 
+                    return next_step(ans)
 @wrapper
 def main(stdsrc):
     global blocks
     global same_color_block
     global CHANCES
-    
     stdsrc.clear()
+    stdsrc.bkgd(' ', get_colours('W'))
     stdsrc.refresh()
     curses.echo()
     stdsrc.addstr(0,0,''' Rules ~
 Set the upper left color/shape, which fills in all the adjacent squares of that color/shape. 
 Try to make the entire board the same color/shape.\n\n\n>''',curses.A_BOLD)
     rectangle(stdsrc,4,1,BORDER_HEIGHT,BORDER_WIDTH)
-    
+    next_step(same_color_block.get((5,2)))
     while CHANCES!=0:
         for j in same_color_block:
             blocks[j] = same_color_block[j]  
         for i in blocks:
             stdsrc.addstr(i[0],i[1],BLOCK,get_colours(blocks.get(i)))
+        
+        if len(same_color_block) == len(blocks):
+            stdsrc.addstr(BORDER_HEIGHT+1,1,' '*100)
+            stdsrc.addstr(BORDER_HEIGHT+1,1,'Congratulations!! You WIN!!')
+            stdsrc.addstr(BORDER_HEIGHT+2,1,'Press enter to exit.')
+            stdsrc.getch()
+            quit()
+            
         
         stdsrc.addstr(BORDER_HEIGHT+1,1,f'Choose one of')
         stdsrc.addstr(' (R)ed',get_colours('R'))
@@ -94,12 +100,6 @@ Try to make the entire board the same color/shape.\n\n\n>''',curses.A_BOLD)
        
         same_color_block = {i:ans for i in same_color_block}    
         next_step(ans)
-        if len(same_color_block) == len(blocks):
-            stdsrc.addstr(BORDER_HEIGHT+1,1,' '*100)
-            stdsrc.addstr(BORDER_HEIGHT+1,1,'Congratulations!! You WIN!!')
-            stdsrc.addstr(BORDER_HEIGHT+2,1,'Press enter to exit.')
-            stdsrc.getch()
-            
         stdsrc.addstr(BORDER_HEIGHT+1,70,' '*10)
         CHANCES -= 1
         

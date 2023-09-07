@@ -24,12 +24,12 @@ def get_colours(a):
 
 def get_symbol(a):
     symbol = {
-    'H': chr(9829),  # '♥'
-    'D': chr(9830),  # '♦'
-    'S': chr(9824),  # '♠'
-    'C': chr(9827),  # '♣'
-    'B': chr(9679),  # '●'
-    'T': chr(9650),}  # '▲'
+    'H': (chr(9829),get_colours('R')),  # '♥'
+    'D': (chr(9830),get_colours("B")),  # '♦'
+    'S': (chr(9824),get_colours("Y")),  # '♠'
+    'C': (chr(9827),get_colours('G')),  # '♣'
+    'B': (chr(9679),get_colours('C')),  # '●'
+    'T': (chr(9650),get_colours("P")),}  # '▲'
     return symbol.get(a)
 
 
@@ -74,7 +74,7 @@ Try to make the entire board the same color/shape.\nDo you want to play in color
             blocks = {(i,j):random.choice(['Y', 'R', 'B', 'G', 'P', 'C']) for i in range(5,BORDER_HEIGHT) for j in range(2,BORDER_WIDTH)}
             break
         elif choice.lower().startswith('y'):
-            blocks = {(i,j):random.choice(['H','D','S','C','B','T']) for i in range(5,BORDER_HEIGHT) for j in range(2,BORDER_WIDTH)}
+            blocks = {(i,j,):random.choice(['H','D','S','C','B','T']) for i in range(5,BORDER_HEIGHT) for j in range(2,BORDER_WIDTH)}
             break
         else:
             stdsrc.addstr(3,48,' '*10)
@@ -91,11 +91,12 @@ Try to make the entire board the same color/shape.\nDo you want to play in color
     while CHANCES!=0:
         for j in same_block:
             blocks[j] = same_block[j]  
+            
         for i in blocks:
             if choice.lower().startswith('n'):
                 stdsrc.addstr(i[0],i[1],BLOCK,get_colours(blocks.get(i)))
             else:
-                stdsrc.addstr(i[0],i[1],get_symbol(blocks.get(i)))
+                stdsrc.addstr(i[0],i[1],get_symbol(blocks.get(i))[0],get_symbol(blocks.get(i))[1])
         
         if len(same_block) == len(blocks):
             stdsrc.addstr(BORDER_HEIGHT+1,1,' '*100)
@@ -106,37 +107,40 @@ Try to make the entire board the same color/shape.\nDo you want to play in color
         
         if choice.lower().startswith('n'):   
             stdsrc.addstr(BORDER_HEIGHT+1,1,f'Choose one of')
-            stdsrc.addstr(' (R)ed',get_colours('R'))
-            stdsrc.addstr(' (Y)ellow',get_colours('Y'))
-            stdsrc.addstr(' (B)lue',get_colours('B'))
-            stdsrc.addstr(' (G)reen',get_colours('G'))
-            stdsrc.addstr(' (P)urple',get_colours('P'))
-            stdsrc.addstr(' (C)yan',get_colours('C'))
+            for _ in [' (R)ed',' (Y)ellow',' (B)lue',' (G)reen',' (P)urple',' (C)yan',]:
+                col = str(_).strip()
+                stdsrc.addstr(_,get_colours(col[1]))
             stdsrc.addstr(' (Q)uit : ')
             stdsrc.addstr(BORDER_HEIGHT+2,1,f'{CHANCES} LEFT')
             ans = stdsrc.getstr(BORDER_HEIGHT+1,70).decode(encoding='utf-8').upper()
         else:
-            stdsrc.addstr(BORDER_HEIGHT+1,1,f'Choose one of (H)EART,(D)iamonds,(S)pade,(C)lub,(B)all,(T)riangle,(Q)uit : ')
-            ans = stdsrc.getstr(BORDER_HEIGHT+1,80).decode(encoding='utf-8').upper()
+            stdsrc.addstr(BORDER_HEIGHT+1,1,f'Choose one of')
+            for _ in [' (H)EART',' (D)iamonds',' (S)pade',' (C)lub',' (B)all',' (T)riangle,']:
+                col = str(_).strip()
+                stdsrc.addstr(_,get_symbol(col[1])[1])
+            stdsrc.addstr(' (Q)uit : ')
+            stdsrc.addstr(BORDER_HEIGHT+2,1,f'{CHANCES} LEFT')
+            ans = stdsrc.getstr(BORDER_HEIGHT+1,77).decode(encoding='utf-8').upper()
             
-        ans = stdsrc.getstr(BORDER_HEIGHT+1,70).decode(encoding='utf-8').upper()
+        if choice.lower().startswith('n'):   
+            while ans not in ['R', 'G', 'B', 'Y', 'P', 'C', 'Q']:
+                stdsrc.addstr(BORDER_HEIGHT+1,70,' '*10)
+                ans = stdsrc.getstr(BORDER_HEIGHT+1,70).decode(encoding='utf-8').upper()
+            stdsrc.addstr(BORDER_HEIGHT+1,70,' '*10)
+        else:
+            while ans not in ['H', 'D', 'S', 'C', 'B', 'T', 'Q']:
+                stdsrc.addstr(BORDER_HEIGHT+1,77,' '*10)
+                ans = stdsrc.getstr(BORDER_HEIGHT+1,77).decode(encoding='utf-8').upper()
+            stdsrc.addstr(BORDER_HEIGHT+1,77,' '*10)
+            
         ans = ' ' if ans =='' else ans
         ans = ans[0]
         if ans == 'Q':
             quit()   
         
-        if choice.lower().startswith('n'):   
-            while ans not in ['R', 'G', 'B', 'Y', 'P', 'C', 'Q']:
-                stdsrc.addstr(BORDER_HEIGHT+1,70,' '*10)
-                ans = stdsrc.getstr(BORDER_HEIGHT+1,70).decode(encoding='utf-8').upper()
-        else:
-            while ans not in ['H', 'D', 'S', 'C', 'B', 'T', 'Q']:
-                stdsrc.addstr(BORDER_HEIGHT+1,70,' '*10)
-                ans = stdsrc.getstr(BORDER_HEIGHT+1,80).decode(encoding='utf-8').upper()
         
         same_block = {i:ans for i in same_block}    
         next_step(ans)
-        stdsrc.addstr(BORDER_HEIGHT+1,70,' '*10)
         CHANCES -= 1
         
     stdsrc.addstr(BORDER_HEIGHT+1,1,' '*100)

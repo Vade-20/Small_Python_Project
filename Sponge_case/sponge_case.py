@@ -21,6 +21,7 @@ def main():
     ans = sponge_casing(text)
     print(ans)
     print(f'{sponge_casing("copied spongecase to clipboard")}')
+    copy(ans)
 
 if __name__ == '__main__':
     main()

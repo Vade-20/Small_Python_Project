@@ -4,14 +4,18 @@ from pyperclip import copy
 
 def sponge_casing(text:str):
     new_text = ''
+    use_upper = True
     for i in text:
         if not i.isalpha():
             new_text += i
             continue
-        num = randint(0,1)
-        if num == 0:
+        
+        if randint(1,100) <90:                  #90 percent propbabilty the cases will switch
+            use_upper = not use_upper
+            
+        if use_upper:
             new_text += i.lower()
-        elif num == 1:
+        else:
             new_text += i.upper()
     return new_text    
         

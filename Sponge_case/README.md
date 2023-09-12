@@ -4,7 +4,7 @@
 
 This Python program, named "Sponge Casing Text Generator," is a simple text manipulation tool that transforms input text by randomly changing the casing of letters. It simulates a "sponge case," where the letter casing (uppercase or lowercase) of each character is determined randomly with a 90% probability.
 
-3. **Usage**:
+### **Usage**:
 
    - When you run the program, it will prompt you to enter a message. Type the message you want to convert into sponge casing and press Enter.
 
@@ -12,12 +12,12 @@ This Python program, named "Sponge Casing Text Generator," is a simple text mani
 
    - Additionally, it will copy the transformed text to your clipboard, making it easy to paste into other applications.
 
-4. **Example**:
+### **Example**:
 
    - Input: "Hello, World!"
    - Output: "HeLlO, wOrLd!"
 
-5. **Notes**:
+### **Notes**:
 
    - The program changes the casing of letters randomly with the probability of 90 percent of changing cases, so running it multiple times with the same input may produce different results.
 

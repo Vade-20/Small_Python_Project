@@ -11,7 +11,7 @@ options = {'r':'ROCK', 's':'SCISSORS', 'p':'PAPER'}
 WINS = 0
 LOSSES = 0
 TIES = 0
-PAUSE = 0.5
+PAUSE = 0.28
 
 def who_wins(user,comp):
     global WINS,LOSSES,TIES

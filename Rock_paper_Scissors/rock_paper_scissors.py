@@ -24,8 +24,10 @@ def who_wins(user,comp):
     elif user==comp:
         TIES += 1
         print('It\'s a tie!')
-        
+    
+round_count = 1    
 while True:
+    print(f'ROUND-{round_count}')
     print(f'{WINS} Wins, {LOSSES} Losses, {TIES} Ties')
     while True:
         user = input('Enter your move: (R)ock,(P)aper,(S)cissors or (Q)uit : ')
@@ -44,3 +46,4 @@ while True:
     print(options.get(comp))
     who_wins(user,comp)
     print('-'*54)
+    round_count+=1

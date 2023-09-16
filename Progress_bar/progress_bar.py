@@ -4,7 +4,7 @@ from time import sleep
 num_of_iterations = 500000
 
 
-def main(num_of_iterations:int):
+def bar(num_of_iterations:int):
     stdsrc = curses.initscr()
     curses.noecho()  # Turn off automatic echoing of keys to the screen
     curses.cbreak()  # React to keys instantly (don't wait for Enter)
@@ -21,11 +21,11 @@ def main(num_of_iterations:int):
         GREEN = curses.color_pair(1)
         RED = curses.color_pair(2)
 
-        stdsrc.addstr('Progress Bar Simulation\n',GREEN)
+        stdsrc.addstr('Progress Bar \n',GREEN)
         stdsrc.addstr('[',GREEN)
         stdsrc.addstr(1,52,']',GREEN)
         stdsrc.refresh()
-        bar =  curses.newwin(1,51,1,1) 
+        bar_win =  curses.newwin(1,51,1,1) 
         percentage_win = curses.newwin(1,20,1,54) 
         value_ = 0
         bar_percentage = 0
@@ -36,8 +36,8 @@ def main(num_of_iterations:int):
             percentage_win.addstr(f'{current_percentage}%  {value_}/{num_of_iterations}',RED)
             percentage_win.refresh()
             while bar_percentage<int(current_percentage/2):
-                bar.addstr(BLOCK,RED)
-                bar.refresh()
+                bar_win.addstr(BLOCK,RED)
+                bar_win.refresh()
                 bar_percentage += 1
         sleep(1)
         print('Progress Completed')
@@ -50,4 +50,4 @@ def main(num_of_iterations:int):
 
 
 if __name__=='__main__':
-    main(num_of_iterations)
+    bar(num_of_iterations)

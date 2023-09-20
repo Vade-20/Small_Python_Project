@@ -18,7 +18,7 @@ def get_duck():
         #body
         duck.append(f"({random.choice(['^','<','>','v'])}{' '*(size)})")
         #legs
-        duck.append(f" ^{' '*(size-2)}^  ")
+        duck.append(f" ^{' '*(size-1)}^  ")
     else:
         #face
         duck.append(random.choice(['>','='])+random.choice(['``',"''",'^^','""','**'])+' '*(size-2)+') ')# mouth+eyes+space depending on the size of the duck+back_head
@@ -41,7 +41,7 @@ def get_duck():
 while True:
     all_duck_in_ascending_order = {}
     
-    if  len(all_ducks)<MAX_DUCK:
+    if  random.randint(0,100)<MAX_DUCK:
         get_duck()
         
     for i in sorted(all_ducks):
@@ -50,10 +50,10 @@ while True:
     rough = 0
     for i in range(0,x_max):
         i += rough
-        if i==x_max:
+        if i>x_max-5:
             break
         if i in all_duck_in_ascending_order:
-            rough+=8
+            rough+=5
             value = all_ducks[i].pop(0)
             print(value,end='',flush=True)
         else:

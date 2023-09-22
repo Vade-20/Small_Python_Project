@@ -2,9 +2,9 @@ from string import ascii_uppercase
 from random import shuffle
 from pyperclip import copy
 
-print('''Simple Substitution Cipher
+print('''Simple Substitution Cipher\n
 A simple substitution cipher has a one-to-one translation for each
-symbol in the plaintext and each symbol in the ciphertext.''')
+symbol in the plaintext and each symbol in the ciphertext.\n''')
 
 while True:
     mode = input('Do you want to (e)ncrypt or (d)ecrypt : ')
@@ -26,17 +26,22 @@ while True:
         alpha = [i for i in ascii_uppercase]
         shuffle(alpha)
         key = ''.join(alpha)
-        print(f'The key is {key}. KEEP THIS SECRET!')        
+        print(f'The key is {key} . KEEP THIS SECRET!')        
     #check if the key is valid or not
-    for i in key:
-        if i not in ascii_uppercase:
-            print('Please enter a valid key which only contains alphabetic characters')
-            continue
     if len(key) != len(ascii_uppercase):
         print('Please enter a valid key which contains all the alphabetic characters')
         continue
-    break
+    
+    for i in key:
+        if i not in ascii_uppercase:
+            print('Please enter a valid key which only contains alphabetic characters')
+            break
+    else:
+        break
+    
+    continue
 
+print('\n')
 mode__ = 'encrypted' if mode == 'e' else 'decrypted'
 message = input(f'Enter the message to {mode__} : ')
 if mode == 'e':
@@ -53,9 +58,9 @@ for i in message:
     else:
         translated += i
 
-print(f' The {mode__} message is:\n{translated}')
+print(f'The {mode__} message is:{translated}')
 copy(translated)
-print(f'Full {mode__} text copied to clipboard.')
+print(f'\nFull {mode__} text copied to clipboard.')
 
     
 

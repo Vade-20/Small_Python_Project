@@ -6,6 +6,9 @@ x_max,y_max = shutil.get_terminal_size()
 DUCK_DENSITY = 0.05
 duck_position = [None for _ in range(x_max//6)]
 
+print("\033[33m")
+print('Duckling')
+print('Press CTRL+C to exit\n')
 
 def get_duck(index):
     global duck_position
@@ -59,5 +62,6 @@ while True:
         sleep(0.2)
         
     except KeyboardInterrupt:
-        print("Thank you")
+        print("\nThank you")
+        print("\033[0m")
         break    

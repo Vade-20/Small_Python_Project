@@ -2,66 +2,62 @@ import random
 import shutil
 from time import sleep
 
-MAX_DUCK = 90
-all_ducks = {}
 x_max,y_max = shutil.get_terminal_size()
-DESNSITY = 10
-    
-def get_duck():
-    global all_ducks
-    
+DUCK_DENSITY = 0.05
+duck_position = [None for _ in range(x_max//6)]
+
+
+def get_duck(index):
+    global duck_position
     duck = []
     size = random.randint(2,3)
-    if random.randint(0,1)==1:
-        #face
-        duck.append(' ('+' '*(size-2)+random.choice(['``',"''",'^^','""','**'])+random.choice(['<','='])) # back_head + space depending on the size of the duck+eyes+mouth
+    eyes = random.choice(['``',"''",'^^','""','**'])
+    wing = random.choice(['^','<','>','v'])
+    mouth = random.choice(['<','='])
+    optional_space = ' '*(3-size)
+    space = ' '
+    if random.randint(0,1) == 1:
+        face = space+'('
+        face = face + eyes + mouth + space
+        duck.append(face) # back_head + space depending on the size of the duck+eyes+mouth
         #body
-        duck.append(f"({random.choice(['^','<','>','v'])}{' '*(size)})")
-        #legs
-        duck.append(f" ^{' '*(size-1)}^  ")
+        body = '(' + wing +space*(size-1)+')'+ space + optional_space
+        duck.append(body)
+        #legs  
+        legs = space+f"^{space*(size-2)}^"+ space*2 + optional_space 
+        duck.append(legs)
     else:
         #face
-        duck.append(random.choice(['>','='])+random.choice(['``',"''",'^^','""','**'])+' '*(size-2)+') ')# mouth+eyes+space depending on the size of the duck+back_head
+        face = mouth+eyes+')'+space*2
+        duck.append(face)
         #body
-        duck.append(f"({' '*(size)}{random.choice(['^','<','>','v'])})")
+        body =  space+'('+space*(size-1)+wing+')'+optional_space
+        duck.append(body)
         #legs
-        duck.append(f" ^{' '*(size-1)}^ ")
-    
-    if all_ducks=={}:
-        all_ducks[random.randint(0,x_max-11)]=duck
-    else:
-        while True:
-            x_corr = random.randint(0,x_max-11)
-            if any([x_corr in range(i,i+11) for i in all_ducks]):
-                continue
-            else:
-                all_ducks[random.randint(0,x_max-11)]=duck
-                break
- 
+        legs = space*2+f"^{space*(size-2)}^"+space+optional_space
+        duck.append(legs) 
+    duck.append(' '*6)
+    duck_position[index] = duck
+
+
 while True:
-    all_duck_in_ascending_order = {}
-    
-    if  random.randint(0,100)<MAX_DUCK:
-        get_duck()
+    try :
+        for i in range(len(duck_position)):
+            if duck_position[i] == None and random.random()<DUCK_DENSITY:
+                get_duck(i)
+                
+        for i in range(len(duck_position)):
+            if duck_position[i] != None:
+                duck = duck_position[i].pop(0)
+                print(duck,end='',flush=True)
+                if duck_position[i] == []:
+                    duck_position[i] = None
+            else:
+                print(' '*6,end='',flush=True)
         
-    for i in sorted(all_ducks):
-        all_duck_in_ascending_order[i] = all_ducks[i]
+        print('')             
+        sleep(0.2)
         
-    rough = 0
-    for i in range(0,x_max):
-        i += rough
-        if i>x_max-5:
-            break
-        if i in all_duck_in_ascending_order:
-            rough+=5
-            value = all_ducks[i].pop(0)
-            print(value,end='',flush=True)
-        else:
-            print(' ',end='',flush=True)
-    
-    for i in all_duck_in_ascending_order:
-        if all_ducks[i]==[]:
-            all_ducks.pop(i)          
-    print('')
-    sleep(0.2)
-    
+    except KeyboardInterrupt:
+        print("Thank you")
+        break    

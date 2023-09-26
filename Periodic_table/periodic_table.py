@@ -8,7 +8,6 @@ ALL_COLUMNS = ['Atomic Number', 'Symbol', 'Element', 'Origin of name',
                'Specific heat capacity', 'Electronegativity',
                'Abundance in earth\'s crust']
 ALL_UNITS = ['']*6+[' u',' g/cm^3',' K',' K',' J/(g*K)','',' mg/kg']
-print(ALL_UNITS)
 
 print('Periodic Table of Elements\n')
 print('''            Periodic Table of Elements
@@ -41,7 +40,7 @@ while True:
             if ans == i[1].lower():
                 element = i
         for i in range(len(element)):
-            element[i] = re.sub(r'\[(I|V|X)+\]', '', element[i])
+            element[i] = re.sub(r'\[(I|V|X)+\]', '', element[i]) #removing roman numeral that comes with data
             print(f"{ALL_COLUMNS[i].rjust(30)} : {element[i]}{ALL_UNITS[i]}")
     else:
         continue

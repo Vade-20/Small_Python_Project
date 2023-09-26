@@ -9,8 +9,7 @@ ALL_COLUMNS = ['Atomic Number', 'Symbol', 'Element', 'Origin of name',
                'Abundance in earth\'s crust']
 ALL_UNITS = ['']*6+[' u',' g/cm^3',' K',' K',' J/(g*K)','',' mg/kg']
 
-print('Periodic Table of Elements\n')
-print('''            Periodic Table of Elements
+print('''              Periodic Table of Elements
       1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18
     1 H                                                  He
     2 Li Be                               B  C  N  O  F  Ne

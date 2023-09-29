@@ -1,7 +1,7 @@
 import curses
 from curses import wrapper
 
-NUM_OF_COL = 20 # Max 25
+NUM_OF_COL = 5 # Max 25
 PLAYER_TURN = 1
 
 def rules(stdsrc):
@@ -26,7 +26,7 @@ def printing_board(stdsrc,board):
     final_board += '\n   +'+'---|'*NUM_OF_COL+'\n'
     
     for i in range(NUM_OF_COL):
-        final_board += f'{str(i+1).ljust(3)}|'
+        final_board += f'{" ".ljust(3)}|'
         for j in range(NUM_OF_COL):
             final_board += ' '+board[i][j]+' |'        
         final_board += '\n'
@@ -85,14 +85,19 @@ def win_condition(stdsrc,board):
             stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()
-                
+         
+    #First Half of Diagonal  patter - climbing up the stairs      
     for i in range(NUM_OF_COL):
         rough_var = 0
         board_elements = ''
+        i += 1
         while i != 0 :
-            board_elements += board[rough_var][i]
             i -= 1
+            board_elements += board[rough_var][i]
             rough_var += 1
+        with open('rough.txt', 'a') as f:
+            f.write(board_elements)
+            f.write('\n')
             
         if x_win in board_elements:
             stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
@@ -102,6 +107,69 @@ def win_condition(stdsrc,board):
             stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()
+    
+    #Second Half of diagonals pattern - climbing up the stairs
+    for i in range(1,NUM_OF_COL):
+        rough_var = NUM_OF_COL-1
+        board_elements = ''
+        while i != NUM_OF_COL:
+            board_elements += board[i][rough_var]
+            i += 1
+            rough_var -= 1
+        with open('rough.txt', 'a') as f:
+            f.write(board_elements)
+            f.write('\n')
+        if x_win in board_elements:
+            stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
+            stdsrc.getch()
+            quit()  
+        elif o_win in board_elements:
+            stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
+            stdsrc.getch()
+            quit()
+            
+    #First Half of diagonal pattern - climbing down the stairs
+    
+    for i in range(NUM_OF_COL):
+        rough_var = 0
+        board_elements = ''
+        while i != NUM_OF_COL :
+            i += 1
+            board_elements += board[rough_var][i]
+            rough_var += 1
+        with open('rough.txt', 'a') as f:
+            f.write(board_elements)
+            f.write('\n')
+            
+        if x_win in board_elements:
+            stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
+            stdsrc.getch()
+            quit()  
+        elif o_win in board_elements:
+            stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
+            stdsrc.getch()
+            quit()
+    
+    for i in range(1,NUM_OF_COL):
+        rough_var = NUM_OF_COL-1
+        board_elements = ''
+        while i != NUM_OF_COL:
+            board_elements += board[i][rough_var]
+            i += 1
+            rough_var -= 1
+        with open('rough.txt', 'a') as f:
+            f.write(board_elements)
+            f.write('\n')
+        if x_win in board_elements:
+            stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
+            stdsrc.getch()
+            quit()  
+        elif o_win in board_elements:
+            stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
+            stdsrc.getch()
+            quit()
+    
+        
             
             
     

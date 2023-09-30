@@ -1,7 +1,7 @@
 import curses
 from curses import wrapper
 
-NUM_OF_COL = 5 # Max 25
+NUM_OF_COL = 7 # Max 25
 
 PLAYER_TURN = 1 # Only 1 or 2
 
@@ -55,6 +55,18 @@ def playing_the_game(move):
             pos -= 1
             continue
         break
+
+
+def tie_condition(stdsrc,board):
+    not_empty_board = []
+    for i in board:
+        if i in ['X','O']:
+            not_empty_board.append(i)
+    
+    if len(not_empty_board) == len(board):
+        stdsrc.addstr("\nIt's a Tie.\nPress any key to exit.\n")
+        stdsrc.getch()
+        quit() 
     
     
 def win(stdsrc,board):
@@ -64,11 +76,11 @@ def win(stdsrc,board):
     for i in board:
         board_elements = ''.join(i)
         if x_win in board_elements:
-            stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations X Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()  
         elif o_win in board_elements:
-            stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations O Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()
                
@@ -78,11 +90,11 @@ def win(stdsrc,board):
             board_elements += board[j][i]
             
         if x_win in board_elements:
-            stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations X Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()       
         elif o_win in board_elements:
-            stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations O Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()
             
@@ -98,11 +110,11 @@ def win(stdsrc,board):
             rough_var += 1
         board_tan45.append(board_elements)    
         if x_win in board_elements:
-            stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations X Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()  
         elif o_win in board_elements:
-            stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations O Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()
 
@@ -115,11 +127,11 @@ def win(stdsrc,board):
             rough_var -= 1
         board_tan45.append(board_elements)
         if x_win in board_elements:
-            stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations X Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()  
         elif o_win in board_elements:
-            stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations O Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()
                    
@@ -135,11 +147,11 @@ def win(stdsrc,board):
             
         board_tan135.append(board_elements)   
         if x_win in board_elements:
-            stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations X Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()  
         elif o_win in board_elements:
-            stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations O Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()
             
@@ -153,11 +165,11 @@ def win(stdsrc,board):
             rough_var += 1
         board_tan135.append(board_elements)
         if x_win in board_elements:
-            stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations X Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()  
         elif o_win in board_elements:
-            stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
+            stdsrc.addstr("\nCongratulations O Wins The Game.\nPress any key to exit.\n")
             quit()
     
           
@@ -166,10 +178,12 @@ def main(stdsrc):
     global board,PLAYER_TURN
     curses.echo()
     board = [['-' for j in range(NUM_OF_COL)] for i in range(NUM_OF_COL)]
+    rules(stdsrc)
+    
     while True:
         printing_board(stdsrc,board)
         win(stdsrc,board)
-        
+        tie_condition(stdsrc,board)
         move = stdsrc.getstr().decode(encoding='utf-8')
         if not move.isdigit():
             continue

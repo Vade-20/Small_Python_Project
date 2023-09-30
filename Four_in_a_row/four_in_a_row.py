@@ -2,7 +2,8 @@ import curses
 from curses import wrapper
 
 NUM_OF_COL = 5 # Max 25
-PLAYER_TURN = 1
+
+PLAYER_TURN = 1 # Only 1 or 2
 
 def rules(stdsrc):
     stdsrc.clear()
@@ -30,7 +31,6 @@ def printing_board(stdsrc,board):
         for j in range(NUM_OF_COL):
             final_board += ' '+board[i][j]+' |'        
         final_board += '\n'
-        
     final_board += '   |'+'___|'*NUM_OF_COL+'\n\n'
     
     if PLAYER_TURN == 1:
@@ -55,14 +55,14 @@ def playing_the_game(move):
             pos -= 1
             continue
         break
-
-def win_condition(stdsrc,board):
+    
+    
+def win(stdsrc,board):
     x_win = 'XXXX'
     o_win = 'OOOO'
     
     for i in board:
         board_elements = ''.join(i)
-        
         if x_win in board_elements:
             stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
@@ -85,8 +85,9 @@ def win_condition(stdsrc,board):
             stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()
-         
-    #First Half of Diagonal  patter - climbing up the stairs      
+            
+            
+    board_tan45 = []    
     for i in range(NUM_OF_COL):
         rough_var = 0
         board_elements = ''
@@ -95,10 +96,7 @@ def win_condition(stdsrc,board):
             i -= 1
             board_elements += board[rough_var][i]
             rough_var += 1
-        with open('rough.txt', 'a') as f:
-            f.write(board_elements)
-            f.write('\n')
-            
+        board_tan45.append(board_elements)    
         if x_win in board_elements:
             stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
@@ -107,8 +105,7 @@ def win_condition(stdsrc,board):
             stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()
-    
-    #Second Half of diagonals pattern - climbing up the stairs
+
     for i in range(1,NUM_OF_COL):
         rough_var = NUM_OF_COL-1
         board_elements = ''
@@ -116,9 +113,7 @@ def win_condition(stdsrc,board):
             board_elements += board[i][rough_var]
             i += 1
             rough_var -= 1
-        with open('rough.txt', 'a') as f:
-            f.write(board_elements)
-            f.write('\n')
+        board_tan45.append(board_elements)
         if x_win in board_elements:
             stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
@@ -127,39 +122,18 @@ def win_condition(stdsrc,board):
             stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()
+                   
             
-    #First Half of diagonal pattern - climbing down the stairs
-    
-    for i in range(NUM_OF_COL):
+    board_tan135 = []        
+    for i in range(NUM_OF_COL-1,-1,-1):
         rough_var = 0
         board_elements = ''
         while i != NUM_OF_COL :
-            i += 1
-            board_elements += board[rough_var][i]
-            rough_var += 1
-        with open('rough.txt', 'a') as f:
-            f.write(board_elements)
-            f.write('\n')
-            
-        if x_win in board_elements:
-            stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
-            stdsrc.getch()
-            quit()  
-        elif o_win in board_elements:
-            stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
-            stdsrc.getch()
-            quit()
-    
-    for i in range(1,NUM_OF_COL):
-        rough_var = NUM_OF_COL-1
-        board_elements = ''
-        while i != NUM_OF_COL:
             board_elements += board[i][rough_var]
             i += 1
-            rough_var -= 1
-        with open('rough.txt', 'a') as f:
-            f.write(board_elements)
-            f.write('\n')
+            rough_var += 1
+            
+        board_tan135.append(board_elements)   
         if x_win in board_elements:
             stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
@@ -168,11 +142,25 @@ def win_condition(stdsrc,board):
             stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
             stdsrc.getch()
             quit()
-    
-        
             
-            
+
+    for i in range(1,NUM_OF_COL):
+        rough_var = 1
+        board_elements = ''
+        while i != NUM_OF_COL:
+            board_elements += board[rough_var][i]
+            i += 1
+            rough_var += 1
+        board_tan135.append(board_elements)
+        if x_win in board_elements:
+            stdsrc.addstr("Congratulations X Wins The Game.\nPress any key to exit.\n")
+            stdsrc.getch()
+            quit()  
+        elif o_win in board_elements:
+            stdsrc.addstr("Congratulations O Wins The Game.\nPress any key to exit.\n")
+            quit()
     
+          
 @wrapper
 def main(stdsrc):
     global board,PLAYER_TURN
@@ -180,7 +168,7 @@ def main(stdsrc):
     board = [['-' for j in range(NUM_OF_COL)] for i in range(NUM_OF_COL)]
     while True:
         printing_board(stdsrc,board)
-        win_condition(stdsrc,board)
+        win(stdsrc,board)
         
         move = stdsrc.getstr().decode(encoding='utf-8')
         if not move.isdigit():

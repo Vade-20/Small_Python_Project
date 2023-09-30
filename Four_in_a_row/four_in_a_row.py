@@ -60,7 +60,10 @@ def playing_the_game(move):
 def tie_condition(stdsrc,board):
     not_empty_board = []
     for i in board:
-        if i in ['X','O']:
+        for j in i:
+            if j == '-':
+                break
+        else:
             not_empty_board.append(i)
     
     if len(not_empty_board) == len(board):
@@ -181,16 +184,20 @@ def main(stdsrc):
     rules(stdsrc)
     
     while True:
-        printing_board(stdsrc,board)
-        win(stdsrc,board)
-        tie_condition(stdsrc,board)
-        move = stdsrc.getstr().decode(encoding='utf-8')
-        if not move.isdigit():
+        try:
+            printing_board(stdsrc,board)
+            win(stdsrc,board)
+            tie_condition(stdsrc,board)
+            move = stdsrc.getstr().decode(encoding='utf-8')
+            if not move.isdigit():
+                continue
+            elif int(move) not in range(1,NUM_OF_COL+1):
+                continue
+            
+            PLAYER_TURN = 0 if PLAYER_TURN == 1 else 1
+            playing_the_game(move)
+        except IndexError:
+            PLAYER_TURN = 0 if PLAYER_TURN == 1 else 1
             continue
-        elif int(move) not in range(1,NUM_OF_COL+1):
-            continue
-        
-        PLAYER_TURN = 0 if PLAYER_TURN == 1 else 1
-        playing_the_game(move)
 
         

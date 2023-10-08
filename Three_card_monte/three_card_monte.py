@@ -5,7 +5,7 @@ import time
 
 
 NUMBER_OF_CARDS = 3
-SPEED = 5
+SPEED = 1
 
 def random_card():
     deck_of_cards = [('A', '♥'),(2, '♥'),(3, '♥'),(4, '♥'),(5, '♥'),(6, '♥'),(7, '♥'),(8, '♥'),(9, '♥'),(10, '♥'),('J', '♥'),('Q', '♥'),('K', '♥'),

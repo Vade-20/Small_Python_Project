@@ -120,7 +120,7 @@ Certainly, here are the rules of the game 2048 presented in bullet points:
 
 - **Scoring**: Your score is calculated based on the value of the tiles you combine. Each merge adds the value of the merged tiles to your score. For example, merging two '4' tiles would give you 8 points.
  
-PRESS ENTER YO CONTINUE'''
+PRESS ENTER TO  CONTINUE'''
 
     stdsrc.addstr(5,5,rules,curses.color_pair(1))
     stdsrc.getch()

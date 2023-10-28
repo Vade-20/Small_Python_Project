@@ -29,8 +29,36 @@ def animation_of_button(event):
         b1.config(fg='black',relief='solid')   
     else:
         b1.config(fg=FONT_COLOR,relief='raised')
-            
 
+def show_row_column(event,box):
+    for i in entry_list:
+        for j in i:
+            if str(j['state']) == 'readonly':
+                j.config(readonlybackground='grey94')
+            j.config(bg=BACKGROUND_COLOR)
+    
+    for i in entry_list:
+        if box in i:
+            for j in i:
+                if str(j['state']) == 'readonly':
+                    j.config(readonlybackground='light grey')
+                j.config(bg='light grey')     
+    
+    for i in range(9):
+        column = [entry_list[j][i] for j in range(9)]
+        if box in column:
+            for j in column:
+                if str(j['state']) == 'readonly':
+                    j.config(readonlybackground='light grey')
+                j.config(bg='light grey')
+                 
+def removing_row_column(event):
+    for i in entry_list:
+        for j in i:
+            if str(j['state']) == 'readonly':
+                j.config(readonlybackground='grey94')
+            j.config(bg=BACKGROUND_COLOR)     
+                   
 def winining_condition(event):
     global b1
     box = []
@@ -94,14 +122,16 @@ for i in range(2,14):
         dummy_list = []
         for j in range(2,14):
             if j in [5,9,13]:
-                l1 = Label(root, text='|', fg=FONT_COLOR,bg=BACKGROUND_COLOR  ,font=('Times', '10'), bd=3, relief='flat')
-                l1.grid(row=i, column=j, sticky=W+E)
+                l__ = Label(root, text='|', fg=FONT_COLOR,bg=BACKGROUND_COLOR  ,font=('Times', '10'), bd=3, relief='flat')
+                l__.grid(row=i, column=j, sticky=W+E)
             else:
                 e1 = Entry(root, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '10'), bd=3, relief='groove',width=5,justify='center',validate='key',validatecommand=vcmd)
                 e1.grid(row=i, column=j)
+                e1.bind('<Button-1>',lambda event,box=e1:show_row_column(event,box))
                 dummy_list.append(e1)
         entry_list.append(dummy_list)
-
+        
+l1.bind('<Enter>',removing_row_column)
 pp = [[4,3,5,2,6,9,7,8,1],[6,8,2,5,7,1,4,9,3],[1,9,7,8,3,4,5,6,2],
     [8,2,6,1,9,5,3,4,7],[3,7,4,6,8,2,9,1,5],[9,5,1,7,4,3,6,2,8],
     [5,1,9,3,2,6,8,7,4],[2,4,8,9,5,7,1,3,6],[7,6,3,4,1,8,2,5,'']]
@@ -125,5 +155,4 @@ for i in range(9):
         use_less+=1
         
 root.bind('<Key>',winining_condition)
-    
 mainloop()

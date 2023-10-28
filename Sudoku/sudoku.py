@@ -20,7 +20,22 @@ def new_game():
         for j in i:
             j.config(state='normal')
             j.delete(0,END)
+            
+    with open(r'Mini_python_project\Sudoku\sudokupuzzles.txt','r') as f:
+        puzzles = f.readlines()
     b1.destroy()
+    puzzle = choice(puzzles).strip()
+    use_less = 0
+    for i in range(9):
+        for j in range(9):
+            value = puzzle[use_less]
+            if value != '.':
+                entry_list[i][j].insert(0,value)
+                entry_list[i][j].config(state='readonly')
+            else:
+                entry_list[i][j].insert(0,'')          
+            use_less+=1
+            
     l1 = Label(root, text='Sudoku', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
     l1.grid(row=0, column=0, columnspan=14,sticky=W+E)
    
@@ -52,12 +67,7 @@ def show_row_column(event,box):
                     j.config(readonlybackground='light grey')
                 j.config(bg='light grey')
                  
-def removing_row_column(event):
-    for i in entry_list:
-        for j in i:
-            if str(j['state']) == 'readonly':
-                j.config(readonlybackground='grey94')
-            j.config(bg=BACKGROUND_COLOR)     
+   
                    
 def winining_condition(event):
     global b1
@@ -65,6 +75,9 @@ def winining_condition(event):
     for entry in entry_list:
         box__= []
         for i in entry:
+            if i['state'] == 'readonly':
+                i.config(readonlybackground='grey94')
+            i.config(bg=BACKGROUND_COLOR)
             value = i.get()
             box__.append(value)
             if len(value) >1:
@@ -131,11 +144,15 @@ for i in range(2,14):
                 dummy_list.append(e1)
         entry_list.append(dummy_list)
         
-l1.bind('<Enter>',removing_row_column)
 pp = [[4,3,5,2,6,9,7,8,1],[6,8,2,5,7,1,4,9,3],[1,9,7,8,3,4,5,6,2],
     [8,2,6,1,9,5,3,4,7],[3,7,4,6,8,2,9,1,5],[9,5,1,7,4,3,6,2,8],
     [5,1,9,3,2,6,8,7,4],[2,4,8,9,5,7,1,3,6],[7,6,3,4,1,8,2,5,'']]
 
+for i in range(9):
+    for j in range(9):
+        entry_list[i][j].insert(0,pp[i][j])
+
+'''
 with open(r'Mini_python_project\Sudoku\sudokupuzzles.txt','r') as f:
     puzzles = f.readlines()
 
@@ -153,6 +170,6 @@ for i in range(9):
             entry_list[i][j].insert(0,'')
             
         use_less+=1
-        
+'''        
 root.bind('<Key>',winining_condition)
 mainloop()

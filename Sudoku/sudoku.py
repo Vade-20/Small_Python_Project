@@ -30,7 +30,14 @@ def instances_left():
         
     instance = Label(root, text=f'{str_num_of_instances}', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'), bd=3, relief='solid',justify='center')
     instance.grid(row=15, column=0, columnspan=14,sticky=W+E)     
-    
+
+def normal_board(event):
+    for i in entry_list:
+        for j in i:
+            if str(j['state']) == 'readonly':
+                j.config(readonlybackground='grey94')
+            j.config(bg=BACKGROUND_COLOR)
+            
 def new_game():
     for i in entry_list:
         for j in i:
@@ -49,12 +56,10 @@ def new_game():
                 entry_list[i][j].insert(0,value)
                 entry_list[i][j].config(state='readonly')
             else:
-                entry_list[i][j].insert(0,'')
-                
+                entry_list[i][j].insert(0,'')     
             use_less+=1
             
-    instances_left()
-                  
+    instances_left()             
     l1 = Label(root, text='Sudoku', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
     l1.grid(row=0, column=0, columnspan=14,sticky=W+E)
    
@@ -67,6 +72,7 @@ def animation_of_button(event):
 
 
 def show_row_column(event,box):
+    box_value = event.char
     for i in entry_list:
         for j in i:
             if str(j['state']) == 'readonly':
@@ -74,20 +80,46 @@ def show_row_column(event,box):
             j.config(bg=BACKGROUND_COLOR)
     
     for i in entry_list:
+        for j in i:
+            if box_value == j.get():
+                if str(j['state']) == 'readonly':
+                    j.config(readonlybackground='grey')
+                else:
+                    j.config(bg='grey')
+                   
+    for i in entry_list:
         if box in i:
             for j in i:
-                if str(j['state']) == 'readonly':
-                    j.config(readonlybackground='light grey')
-                j.config(bg='light grey')     
-    
+                if j != box and j.get() == box_value:
+                    box.config(bg='red')
+                    if str(j['state']) == 'readonly':
+                        j.config(readonlybackground='red')
+                    else:
+                        j.config(bg='red')     
+  
     for i in range(9):
         column = [entry_list[j][i] for j in range(9)]
         if box in column:
             for j in column:
-                if str(j['state']) == 'readonly':
-                    j.config(readonlybackground='light grey')
-                j.config(bg='light grey')
-                 
+                if j != box and j.get() == box_value:
+                    box.config(bg='red')
+                    if str(j['state']) == 'readonly':
+                        j.config(readonlybackground='red')
+                    else:
+                        j.config(bg='red')  
+'''    for i in range(3):
+        var_1 = 3*i
+        for j in range(3):
+            var_2 = 3*j
+            new_box = [entry_list[var_1+k][var_2+l] for k in range(3) for l in range(3)]
+            for l in new_box:
+                if l != box and l.get() == box_value:
+                    box.config(bg='red')
+                    if str(l['state']) == 'readonly':
+                        l.config(readonlybackground='red')
+                    else:
+                        l.config(bg='red') 
+    '''
                      
 def winining_condition(event):
     global b1
@@ -97,9 +129,6 @@ def winining_condition(event):
     for entry in entry_list:
         box__= []
         for i in entry:
-            if i['state'] == 'readonly':
-                i.config(readonlybackground='grey94')
-            i.config(bg=BACKGROUND_COLOR)
             value = i.get()
             box__.append(value)
             if len(value) >1:
@@ -147,7 +176,8 @@ l1.grid(row=0, column=0, columnspan=14,sticky=W+E)
 l2 = Label(root, text='      ', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '2'), bd=3, relief='sunken',justify='center')
 l2.grid(row=1, column=0, columnspan=14,sticky=W+E)
 b1 = Button(root,text = 'NEW GAME',fg=FONT_COLOR,bg = BACKGROUND_COLOR,font= ('Times New Roman', '15'),command=new_game,width=15,relief='raised',justify='center')
-b1.grid(row=16,column=0,columnspan=14,sticky=W+E)     
+b1.grid(row=16,column=0,columnspan=14,sticky=W+E) 
+    
 b1.bind('<Enter>',animation_of_button)    
 b1.bind('<Leave>',animation_of_button)   
  
@@ -164,7 +194,7 @@ for i in range(2,14):
             else:
                 e1 = Entry(root, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '10'), bd=3, relief='groove',width=5,justify='center',validate='key',validatecommand=vcmd)
                 e1.grid(row=i, column=j)
-                e1.bind('<Button-1>',lambda event,box=e1:show_row_column(event,box))
+                e1.bind('<Key>',lambda event,box=e1:show_row_column(event,box))
                 dummy_list.append(e1)
         entry_list.append(dummy_list)
         
@@ -197,4 +227,5 @@ instance = Label(root, text=f'{str_num_of_instances}', fg=FONT_COLOR, bg=BACKGRO
 instance.grid(row=15, column=0, columnspan=14,sticky=W+E)     
 
 root.bind('<Key>',winining_condition)
+root.bind('<Button-1>',normal_board)
 mainloop()

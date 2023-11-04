@@ -36,28 +36,28 @@ def wining_condition():
         for j in i:
             values___.append(j.get())
         values_boxes.append(values___)
-    
-    wins = False
-    
+        
     for i in values_boxes:
         set_value = list(set(i))
         if set_value[0] != '' and len(set_value) == 1:
-            print(set_value[0]+'wins the game')
+            return set_value[0]
     
     for i in range(3):
         set_value = list(set([values_boxes[j][i] for j in range(3)]))
         if set_value[0] != '' and len(set_value) == 1:
-            print(set_value[0]+'wins the game')
+            return set_value[0]
     
     
     set_value = list(set([values_boxes[i][i] for i in range(3)]))           
     if set_value[0] != '' and len(set_value) == 1:
-        print(set_value[0]+'wins the game')
+        return set_value[0]
 
     
     set_value = list(set([values_boxes[0][2],values_boxes[1][1],values_boxes[2][0]]))        
     if set_value[0] != '' and len(set_value) == 1:
-        print(set_value[0]+'wins the game')
+        return set_value[0]
+    
+    return None
 
 
 def capital_entry(value,box):
@@ -73,8 +73,28 @@ def capital_entry(value,box):
         l3 = Label(root, text=text, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'),justify='center')
         l3.grid(row=1, column=6,columnspan=4)
         turn = not turn
-        wining_condition()
-        
+    elif mode.get() =='Computer Easy':
+        l3.destroy()
+        text = players[mode.get()][turn]
+        l3 = Label(root, text=text, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'),justify='center')
+        l3.grid(row=1, column=6,columnspan=4)
+        while True:
+            rand = boxes[random.randint(0,2)][random.randint(0,2)]
+            if rand.get() == '':
+                rand.delete(0,END)
+                rand.insert(0,"O")
+                break
+            
+    win = wining_condition()
+    if win is not None:
+        for i in boxes:
+            for j in i:
+                j.config(state='disabled')
+        num = 0 if win == 'X' else 1
+        l1 = Label(root, text=f'Congratulation {players[mode.get()][num]} won the game', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
+        l1.grid(row=0, column=0, columnspan=15,sticky=W+E)
+
+    
 vcmd = (root.register(validate_input_entry), '%P')
 boxes = []
 players = {'PvP':('Player 1', 'Player 2'),"Computer Easy":('Player', 'Computer'),"Computer Hard":('Player', 'Computer')}

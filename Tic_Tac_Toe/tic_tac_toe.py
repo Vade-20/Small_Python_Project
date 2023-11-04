@@ -29,20 +29,53 @@ def validate_input_entry(value):
     else:
         return False
 
+def wining_condition():
+    values_boxes = []
+    for i in boxes:
+        values___=[]
+        for j in i:
+            values___.append(j.get())
+        values_boxes.append(values___)
+    
+    wins = False
+    
+    for i in values_boxes:
+        set_value = list(set(i))
+        if set_value[0] != '' and len(set_value) == 1:
+            print(set_value[0]+'wins the game')
+    
+    for i in range(3):
+        set_value = list(set([values_boxes[j][i] for j in range(3)]))
+        if set_value[0] != '' and len(set_value) == 1:
+            print(set_value[0]+'wins the game')
+    
+    
+    set_value = list(set([values_boxes[i][i] for i in range(3)]))           
+    if set_value[0] != '' and len(set_value) == 1:
+        print(set_value[0]+'wins the game')
+
+    
+    set_value = list(set([values_boxes[0][2],values_boxes[1][1],values_boxes[2][0]]))        
+    if set_value[0] != '' and len(set_value) == 1:
+        print(set_value[0]+'wins the game')
+
+
 def capital_entry(value,box):
     global l3,turn
     value = value.char.upper()
     box.delete(0,END)
     box.insert(0,value)
-    if value in ['X','O']:
+    if value not in ['X','O']:
+        return None
+    if mode.get() == 'PvP':
         l3.destroy()
         text = players[mode.get()][turn]
         l3 = Label(root, text=text, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'),justify='center')
         l3.grid(row=1, column=6,columnspan=4)
         turn = not turn
-    
+        wining_condition()
+        
 vcmd = (root.register(validate_input_entry), '%P')
-board = [['','',''] for i in range(3)]
 boxes = []
 players = {'PvP':('Player 1', 'Player 2'),"Computer Easy":('Player', 'Computer'),"Computer Hard":('Player', 'Computer')}
 turn = True
@@ -83,7 +116,6 @@ for i in range(2,18):
     else:
         Label(root, text='|', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'), bd=3, relief='flat',justify='center').grid(row=i, column=5)
         Label(root, text='|', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'), bd=3, relief='flat',justify='center').grid(row=i, column=9)
-    
     
 
 mainloop()

@@ -8,13 +8,15 @@ BACKGROUND_COLOR = 'light grey'
 FONT_COLOR = 'blue'
 root.config(bg=BACKGROUND_COLOR)
 
-def new_game(event):
+def new_game(event=None):
+    global turn
+    l1 = Label(root, text='TIC TAC TOE', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
+    l1.grid(row=0, column=0, columnspan=15,sticky=W+E)
+    turn = True
     for i in boxes:
         for j in i:
+            j.config(state='normal')
             j.delete(0,END)
-
-def game_mode():
-    pass
 
 def animation_of_button(event):
     #When the mouse hover over the button the button color and font changes
@@ -22,6 +24,7 @@ def animation_of_button(event):
         b1.config(fg='black',relief='solid',bg='grey94')   
     else:
         b1.config(fg=FONT_COLOR,relief='raised',bg=BACKGROUND_COLOR)
+
 
 def validate_input_entry(value):
     if value.upper() in ['X','O','']:
@@ -31,9 +34,12 @@ def validate_input_entry(value):
 
 def wining_condition():
     values_boxes = []
+    tie = 0
     for i in boxes:
         values___=[]
         for j in i:
+            if j.get() == '':
+                tie += 1
             values___.append(j.get())
         values_boxes.append(values___)
         
@@ -57,44 +63,55 @@ def wining_condition():
     if set_value[0] != '' and len(set_value) == 1:
         return set_value[0]
     
-    return None
+    if tie == 0:
+        return True
+    else:
+        return False
 
 
 def capital_entry(value,box):
     global l3,turn
-    value = value.char.upper()
-    box.delete(0,END)
-    box.insert(0,value)
-    if value not in ['X','O']:
-        return None
+    value_1 = value.char.upper()
+
     if mode.get() == 'PvP':
-        l3.destroy()
-        text = players[mode.get()][turn]
-        l3 = Label(root, text=text, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'),justify='center')
-        l3.grid(row=1, column=6,columnspan=4)
+        if turn is True and value_1 == 'X':
+            pass
+        elif turn is False and value_1 == 'O':
+            pass
+        else:
+            box.delete(0,END)
+            return None
+        
+    box.insert(0,value_1)
+    box.config(state='disabled')
+    
+    l3.destroy()
+    text = players[mode.get()][turn]
+    l3 = Label(root, text=text, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'),justify='center')
+    l3.grid(row=1, column=6,columnspan=4)
+    if mode.get() == 'PvP':
         turn = not turn
     elif mode.get() =='Computer Easy':
-        l3.destroy()
-        text = players[mode.get()][turn]
-        l3 = Label(root, text=text, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'),justify='center')
-        l3.grid(row=1, column=6,columnspan=4)
         while True:
             rand = boxes[random.randint(0,2)][random.randint(0,2)]
             if rand.get() == '':
-                rand.delete(0,END)
                 rand.insert(0,"O")
+                rand.config(state='disabled')
                 break
             
     win = wining_condition()
-    if win is not None:
+    if win is True:
         for i in boxes:
             for j in i:
                 j.config(state='disabled')
+        l1 = Label(root, text=f"It's a Tie ", fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
+        l1.grid(row=0, column=0, columnspan=15,sticky=W+E)
+    elif win is not False:
         num = 0 if win == 'X' else 1
         l1 = Label(root, text=f'Congratulation {players[mode.get()][num]} won the game', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
         l1.grid(row=0, column=0, columnspan=15,sticky=W+E)
 
-    
+
 vcmd = (root.register(validate_input_entry), '%P')
 boxes = []
 players = {'PvP':('Player 1', 'Player 2'),"Computer Easy":('Player', 'Computer'),"Computer Hard":('Player', 'Computer')}

@@ -27,13 +27,47 @@ def animation_of_button(event):
 
 
 def validate_input_entry(value):
+    # check if the value is valid for the input in all the mode
     if value.upper() in ['X','O','']:
         return True
     else:
         return False
 
-def wining_condition():
-    values_boxes = []
+def input_validation_based_on_mode(value):
+    # Check if the value is valid for a particular mode
+    if mode.get() == 'PvP':
+        if turn is True and value == 'X':
+            pass
+        elif turn is False and value == 'O':
+            pass
+        else:
+            return False
+    elif mode.get() == 'Computer Easy':
+        if value != 'X':
+            return False
+
+def wining_condition(board):
+    for i in range(0,9,3):
+        if (board[i] == board[i+1] == board[i+2] ) and board[i] != '':
+            return board[i]
+    
+    for i in range(0,3):
+        if (board[i] == board[i+3] == board[i+6] ) and board[i] != '':
+            return board[i]
+    
+    if (board[0] == board[4] == board[8] ) and board[4] != '':
+            return board[4]
+        
+    if (board[2] == board[4] == board[6] ) and board[4] != '':
+            return board[4]
+        
+    if '' not in board:
+        return 'Tie'
+    
+    return False
+    
+    
+'''    values_boxes = []
     tie = 0
     for i in boxes:
         values___=[]
@@ -66,42 +100,31 @@ def wining_condition():
     if tie == 0:
         return True
     else:
-        return False
+        return False'''
 
 
 def capital_entry(value,box):
     global l3,turn
     value_1 = value.char.upper()
-
-    if mode.get() == 'PvP':
-        if turn is True and value_1 == 'X':
-            pass
-        elif turn is False and value_1 == 'O':
-            pass
-        else:
-            box.delete(0,END)
-            return None
-    elif mode.get() == 'Computer Easy':
-        if value_1 != 'X':
-            return None
-        
+    
+    if not input_validation_based_on_mode():
+        return None
     box.insert(0,value_1)
     box.config(state='disabled')
     
+    # Changes the label to show which player/computer turn it is
     l3.destroy()
     text = players[mode.get()][turn]
     l3 = Label(root, text=text, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'),justify='center')
     l3.grid(row=1, column=6,columnspan=4)
+    
     if mode.get() == 'PvP':
         turn = not turn
     elif mode.get() =='Computer Easy':
         while True:
-            c = 0
-            for i in boxes:
-                for j in i:
-                    if j.get() == '':
-                        c += 1
-            if c==0:
+            num_of_empty_spaces_left = len(['' for i in boxes for j in i if j.get()==''])
+            if num_of_empty_spaces_left==0:
+                #No empty spaces is left,it is a tie
                 break
             rand = boxes[random.randint(0,2)][random.randint(0,2)]
             if rand.get() == '':
@@ -109,8 +132,8 @@ def capital_entry(value,box):
                 rand.config(state='disabled')
                 break
             
-    win = wining_condition()
-    if win is True:
+    win = wining_condition([j.get() for i in boxes for j in i])
+    if win is not False:
         for i in boxes:
             for j in i:
                 j.config(state='disabled')

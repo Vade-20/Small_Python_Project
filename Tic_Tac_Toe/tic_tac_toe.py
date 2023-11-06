@@ -81,6 +81,9 @@ def capital_entry(value,box):
         else:
             box.delete(0,END)
             return None
+    elif mode.get() == 'Computer Easy':
+        if value_1 != 'X':
+            return None
         
     box.insert(0,value_1)
     box.config(state='disabled')
@@ -93,6 +96,13 @@ def capital_entry(value,box):
         turn = not turn
     elif mode.get() =='Computer Easy':
         while True:
+            c = 0
+            for i in boxes:
+                for j in i:
+                    if j.get() == '':
+                        c += 1
+            if c==0:
+                break
             rand = boxes[random.randint(0,2)][random.randint(0,2)]
             if rand.get() == '':
                 rand.insert(0,"O")

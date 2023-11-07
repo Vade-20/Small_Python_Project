@@ -1,5 +1,6 @@
 from tkinter import *
 import random
+import math
 
 root = Tk()
 root.title('Tic Tac Toe')
@@ -45,6 +46,8 @@ def input_validation_based_on_mode(value):
     elif mode.get() == 'Computer Easy':
         if value != 'X':
             return False
+        
+    return True
 
 def wining_condition(board):
     for i in range(0,9,3):
@@ -65,49 +68,46 @@ def wining_condition(board):
         return 'Tie'
     
     return False
-    
-    
-'''    values_boxes = []
-    tie = 0
-    for i in boxes:
-        values___=[]
-        for j in i:
-            if j.get() == '':
-                tie += 1
-            values___.append(j.get())
-        values_boxes.append(values___)
-        
-    for i in values_boxes:
-        set_value = list(set(i))
-        if set_value[0] != '' and len(set_value) == 1:
-            return set_value[0]
-    
-    for i in range(3):
-        set_value = list(set([values_boxes[j][i] for j in range(3)]))
-        if set_value[0] != '' and len(set_value) == 1:
-            return set_value[0]
-    
-    
-    set_value = list(set([values_boxes[i][i] for i in range(3)]))           
-    if set_value[0] != '' and len(set_value) == 1:
-        return set_value[0]
 
+def minimax(board,player):
+    max_player = 'X'  
+    other_player = 'O' if player == 'X' else 'X'
+    num_empty_squares = len(['' for i in board if i==''])
     
-    set_value = list(set([values_boxes[0][2],values_boxes[1][1],values_boxes[2][0]]))        
-    if set_value[0] != '' and len(set_value) == 1:
-        return set_value[0]
-    
-    if tie == 0:
-        return True
+    if wining_condition(board) == other_player:
+        return {'position': None, 'score': 1 * (num_empty_squares + 1) if other_player == max_player else -1 * (
+                    num_empty_squares + 1)}
+    elif '' not in board:
+        return {'position': None, 'score': 0}
+
+    if player == max_player:
+        best = {'position': None, 'score': -math.inf}  # each score should minimize
     else:
-        return False'''
+        best = {'position': None, 'score': math.inf}  # each score should maximize
+    for position,possible_move in enumerate(board):
+        if possible_move != '':
+            continue
+        board[position]= player
+        sim_score = minimax(board, other_player)  # simulate a game after making that move
 
+        # undo move
+        board[position] = ''
+        sim_score['position'] = position  # this represents the move optimal next move
+
+        if player == max_player:  # X is max player
+            if sim_score['score'] > best['score']:
+                best = sim_score
+        else:
+            if sim_score['score'] < best['score']:
+                best = sim_score
+    return best
+            
 
 def capital_entry(value,box):
     global l3,turn
     value_1 = value.char.upper()
     
-    if not input_validation_based_on_mode():
+    if not input_validation_based_on_mode(value_1):
         return None
     box.insert(0,value_1)
     box.config(state='disabled')
@@ -119,21 +119,28 @@ def capital_entry(value,box):
     l3.grid(row=1, column=6,columnspan=4)
     
     if mode.get() == 'PvP':
-        turn = not turn
+        turn = not turn #changes player turn
+        
     elif mode.get() =='Computer Easy':
         while True:
             num_of_empty_spaces_left = len(['' for i in boxes for j in i if j.get()==''])
             if num_of_empty_spaces_left==0:
-                #No empty spaces is left,it is a tie
-                break
+                break           #No empty spaces is left,it is a tie
             rand = boxes[random.randint(0,2)][random.randint(0,2)]
             if rand.get() == '':
                 rand.insert(0,"O")
                 rand.config(state='disabled')
                 break
+    elif mode.get() =='Computer Hard':
+        ans = minimax([j.get() for i in boxes for j in i],False)
+
+        box = boxes[ans['position']//3][ans['position']%3]
+        box.insert(0,"O")
+        box.config(state='disabled')
+        
             
     win = wining_condition([j.get() for i in boxes for j in i])
-    if win is not False:
+    if win == 'Tie':
         for i in boxes:
             for j in i:
                 j.config(state='disabled')
@@ -157,7 +164,7 @@ l2 = Label(root, text='Game Mode---->', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font
 l2.grid(row=1, column=0,columnspan=2)
 mode = StringVar()
 options_list = ["PvP", "Computer Easy", "Computer Hard"] 
-mode.set('PvP')
+mode.set('Computer Hard')
 o1 = OptionMenu(root,mode,*options_list,command=new_game)
 o1.grid(row=1,column=2,columnspan=3) 
 o1.config(fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '10'), bd=3, relief='raised',justify='center',width=20)

@@ -43,7 +43,7 @@ def input_validation_based_on_mode(value):
             pass
         else:
             return False
-    elif mode.get() == 'Computer Easy':
+    elif mode.get() in ['Computer Easy','Computer Hard']:
         if value != 'X':
             return False
         
@@ -103,7 +103,7 @@ def minimax(board,player):
     return best
             
 
-def capital_entry(value,box):
+def game_play(value,box):
     global l3,turn
     value_1 = value.char.upper()
     
@@ -133,11 +133,11 @@ def capital_entry(value,box):
                 break
     elif mode.get() =='Computer Hard':
         ans = minimax([j.get() for i in boxes for j in i],False)
-
-        box = boxes[ans['position']//3][ans['position']%3]
-        box.insert(0,"O")
-        box.config(state='disabled')
-        
+        if ans['position'] is not None:
+            box = boxes[ans['position']//3][ans['position']%3]
+            box.insert(0,"O")
+            box.config(state='disabled')
+            
             
     win = wining_condition([j.get() for i in boxes for j in i])
     if win == 'Tie':
@@ -188,11 +188,10 @@ for i in range(2,18):
             e1 = Entry(root, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '50'), bd=3, relief='groove',width=5,justify='center',validate='key',validatecommand=vcmd)
             e1.grid(row=i+1, column=j,columnspan=5,rowspan=5)
             box__.append(e1)
-            e1.bind('<Key>',lambda event,box=e1:capital_entry(event,box))
+            e1.bind('<Key>',lambda event,box=e1:game_play(event,box))
         boxes.append(box__)
     else:
         Label(root, text='|', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'), bd=3, relief='flat',justify='center').grid(row=i, column=5)
         Label(root, text='|', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'), bd=3, relief='flat',justify='center').grid(row=i, column=9)
     
-
 mainloop()

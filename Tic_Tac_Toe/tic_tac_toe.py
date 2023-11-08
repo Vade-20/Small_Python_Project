@@ -5,20 +5,27 @@ import math
 root = Tk()
 root.title('Tic Tac Toe')
 root.geometry('890x600')
-BACKGROUND_COLOR = 'light grey'
-FONT_COLOR = 'blue'
+BACKGROUND_COLOR = 'light blue'
+FONT_COLOR = 'crimson'
+READONLY_COLOR_BG = 'light blue'
+READONLY_COLOR_FG = 'red'
+
 root.config(bg=BACKGROUND_COLOR)
+root.resizable(False,False)
 
 def new_game(event=None):
     global turn
     l1 = Label(root, text='TIC TAC TOE', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
     l1.grid(row=0, column=0, columnspan=15,sticky=W+E)
-    turn = True
+    turn = False
     for i in boxes:
         for j in i:
             j.config(state='normal')
             j.delete(0,END)
-
+    text = players[mode.get()][turn]
+    l3 = Label(root, text=text, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'),justify='center')
+    l3.grid(row=1, column=6,columnspan=4)
+    
 def animation_of_button(event):
     #When the mouse hover over the button the button color and font changes
     if 'Enter' in str(event):
@@ -37,19 +44,19 @@ def validate_input_entry(value):
 def input_validation_based_on_mode(value):
     # Check if the value is valid for a particular mode
     if mode.get() == 'PvP':
-        if turn is True and value == 'X':
+        if turn is False and value == 'X':
             pass
-        elif turn is False and value == 'O':
+        elif turn is True and value == 'O':
             pass
         else:
             return False
     elif mode.get() in ['Computer Easy','Computer Hard']:
         if value != 'X':
-            return False
-        
+            return False  
     return True
 
 def wining_condition(board):
+    # check if the somebody won the game or if it is a tie
     for i in range(0,9,3):
         if (board[i] == board[i+1] == board[i+2] ) and board[i] != '':
             return board[i]
@@ -155,7 +162,7 @@ def game_play(value,box):
 vcmd = (root.register(validate_input_entry), '%P')
 boxes = []
 players = {'PvP':('Player 1', 'Player 2'),"Computer Easy":('Player', 'Computer'),"Computer Hard":('Player', 'Computer')}
-turn = True
+turn = False
 
 l1 = Label(root, text='TIC TAC TOE', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
 l1.grid(row=0, column=0, columnspan=15,sticky=W+E)
@@ -169,7 +176,8 @@ o1 = OptionMenu(root,mode,*options_list,command=new_game)
 o1.grid(row=1,column=2,columnspan=3) 
 o1.config(fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '10'), bd=3, relief='raised',justify='center',width=20)
 
-l3 = Label(root, text='Player 1', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'),justify='center')
+text = players[mode.get()][turn]
+l3 = Label(root, text=text, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'),justify='center')
 l3.grid(row=1, column=6,columnspan=4)
 
 b1 = Button(root,text = 'NEW GAME',fg=FONT_COLOR,bg = BACKGROUND_COLOR,font= ('Times New Roman', '15'),command=new_game,width=15,relief='raised',justify='center')
@@ -185,7 +193,8 @@ for i in range(2,18):
             break
         box__ = []
         for j in [0,5,10]:
-            e1 = Entry(root, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '50'), bd=3, relief='groove',width=5,justify='center',validate='key',validatecommand=vcmd)
+            e1 = Entry(root, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '50'), bd=3, relief='groove',width=5,justify='center',
+                       validate='key',validatecommand=vcmd,disabledbackground=READONLY_COLOR_BG,disabledforeground=READONLY_COLOR_FG)
             e1.grid(row=i+1, column=j,columnspan=5,rowspan=5)
             box__.append(e1)
             e1.bind('<Key>',lambda event,box=e1:game_play(event,box))

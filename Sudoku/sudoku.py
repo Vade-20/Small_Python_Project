@@ -34,7 +34,7 @@ def numbers_on_board():
     instance.grid(row=1, column=14, rowspan=13,sticky=N)  
     
     
-def normal_board(event):
+def normal_board(event=None):
     # Return the background of all the elements to default
     for i in entry_list:
         for j in i:
@@ -47,7 +47,7 @@ def new_game():
     # Will take a random sudoku puzzle from file 'sudokupuzzle.txt'
     for i in entry_list:
         for j in i:
-            j.config(state='normal')
+            j.config(state='normal',bg=BACKGROUND_COLOR)
             j.delete(0,END)
             
     with open(r'Sudoku\sudokupuzzles.txt','r') as f:

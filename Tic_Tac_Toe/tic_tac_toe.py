@@ -14,6 +14,7 @@ root.config(bg=BACKGROUND_COLOR)
 root.resizable(False,False)
 
 def new_game(event=None):
+    # State a new game of tic tac toe
     global turn
     l1 = Label(root, text='TIC TAC TOE', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
     l1.grid(row=0, column=0, columnspan=15,sticky=W+E)
@@ -35,25 +36,16 @@ def animation_of_button(event):
 
 
 def validate_input_entry(value):
-    # check if the value is valid for the input in all the mode
-    if value.upper() in ['X','O','']:
+    # check if the value is valid for the game
+    if turn is False and value == 'X':
         return True
-    else:
+    elif turn is True and value == 'O':
+        return True
+    elif value == '':
+        return True
+    else:       
         return False
-
-def input_validation_based_on_mode(value):
-    # Check if the value is valid for a particular mode
-    if mode.get() == 'PvP':
-        if turn is False and value == 'X':
-            pass
-        elif turn is True and value == 'O':
-            pass
-        else:
-            return False
-    elif mode.get() in ['Computer Easy','Computer Hard']:
-        if value != 'X':
-            return False  
-    return True
+    
 
 def wining_condition(board):
     # check if the somebody won the game or if it is a tie
@@ -108,27 +100,31 @@ def minimax(board,player):
             if sim_score['score'] < best['score']:
                 best = sim_score
     return best
-            
+
+def remove_empty_boxes():
+    for i in boxes:
+        for j in i:
+            if j.get() == '' and j['state']=='disabled':
+                j.config(state='normal')
+                           
 
 def game_play(value,box):
     global l3,turn
     value_1 = value.char.upper()
     
-    if not input_validation_based_on_mode(value_1):
-        return None
     box.insert(0,value_1)
     box.config(state='disabled')
-    
+    remove_empty_boxes()
+    if not validate_input_entry(value_1):
+        return None
     # Changes the label to show which player/computer turn it is
     l3.destroy()
     text = players[mode.get()][turn]
     l3 = Label(root, text=text, fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'),justify='center')
     l3.grid(row=1, column=6,columnspan=4)
     
-    if mode.get() == 'PvP':
-        turn = not turn #changes player turn
-        
-    elif mode.get() =='Computer Easy':
+    if mode.get() =='Computer Easy':
+        turn = not turn
         while True:
             num_of_empty_spaces_left = len(['' for i in boxes for j in i if j.get()==''])
             if num_of_empty_spaces_left==0:
@@ -139,13 +135,14 @@ def game_play(value,box):
                 rand.config(state='disabled')
                 break
     elif mode.get() =='Computer Hard':
+        turn = not turn
         ans = minimax([j.get() for i in boxes for j in i],False)
         if ans['position'] is not None:
             box = boxes[ans['position']//3][ans['position']%3]
             box.insert(0,"O")
             box.config(state='disabled')
             
-            
+    turn = not turn      
     win = wining_condition([j.get() for i in boxes for j in i])
     if win == 'Tie':
         for i in boxes:

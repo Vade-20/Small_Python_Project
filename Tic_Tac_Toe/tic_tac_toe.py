@@ -107,10 +107,19 @@ def remove_empty_boxes():
             if j.get() == '' and j['state']=='disabled':
                 j.config(state='normal')
                            
-
+def adding_turn(event,box):
+    if turn is False:
+        game_play('X',box)
+    else:
+        game_play('O',box)
+        
 def game_play(value,box):
     global l3,turn
-    value_1 = value.char.upper()
+    
+    if value not in ['X','O']:
+        value_1 = value.char.upper()
+    else:
+        value_1 = value 
     
     box.insert(0,value_1)
     box.config(state='disabled')
@@ -195,6 +204,7 @@ for i in range(2,18):
             e1.grid(row=i+1, column=j,columnspan=5,rowspan=5)
             box__.append(e1)
             e1.bind('<Key>',lambda event,box=e1:game_play(event,box))
+            e1.bind('<Button-1>',lambda event,box=e1:adding_turn(event,box))
         boxes.append(box__)
     else:
         Label(root, text='|', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'), bd=3, relief='flat',justify='center').grid(row=i, column=5)

@@ -12,7 +12,6 @@ Welcome to the Tic Tac Toe game! This simple yet engaging game allows you to pla
 - [Game Controls](#game-controls)
 - [Winning the Game](#winning-the-game)
 - [New Game](#new-game)
-- [Enjoy the Game!](#enjoy-the-game)
 
 ## Features
 

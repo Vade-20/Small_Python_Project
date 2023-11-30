@@ -1,6 +1,6 @@
 from tkinter import *
 import random
-import math
+from math import inf as infinity
 
 root = Tk()
 root.title('Tic Tac Toe')
@@ -9,6 +9,8 @@ BACKGROUND_COLOR = 'light blue'
 FONT_COLOR = 'crimson'
 READONLY_COLOR_BG = 'light blue'
 READONLY_COLOR_FG = 'red'
+max_player = 'X' 
+num_of_turn = 0
 
 root.config(bg=BACKGROUND_COLOR)
 root.resizable(False,False)
@@ -68,38 +70,42 @@ def wining_condition(board):
     
     return False
 
-def minimax(board,player):
-    max_player = 'X'  
-    other_player = 'O' if player == 'X' else 'X'
-    num_empty_squares = len(['' for i in board if i==''])
-    
-    if wining_condition(board) == other_player:
-        return {'position': None, 'score': 1 * (num_empty_squares + 1) if other_player == max_player else -1 * (
-                    num_empty_squares + 1)}
-    elif '' not in board:
-        return {'position': None, 'score': 0}
 
-    if player == max_player:
-        best = {'position': None, 'score': -math.inf}  # each score should minimize
+def minimax(state, num_empty_squares, turn):
+
+    player = 'X' if turn is True else 'O' 
+    if player == 'O':
+        best = [-1, -infinity]
     else:
-        best = {'position': None, 'score': math.inf}  # each score should maximize
-    for position,possible_move in enumerate(board):
+        best = [-1, +infinity]
+
+    win = wining_condition(state)
+    if num_empty_squares == 0 or win != False:
+        if win == 'O':
+            score = 1
+        elif win == 'X':
+            score = -1
+        elif win == 'Tie':
+            score = 0
+        return [-1, score]
+
+    for position,possible_move in enumerate(state):
         if possible_move != '':
             continue
-        board[position]= player
-        sim_score = minimax(board, other_player)  # simulate a game after making that move
+        state[position] = player
+        score = minimax(state, num_empty_squares - 1, not turn)
+        state[position] = ''
+        score[0] = position
 
-        # undo move
-        board[position] = ''
-        sim_score['position'] = position  # this represents the move optimal next move
-
-        if player == max_player:  # X is max player
-            if sim_score['score'] > best['score']:
-                best = sim_score
+        if player == 'O':
+            if score[1] > best[1]:
+                best = score  # max value
         else:
-            if sim_score['score'] < best['score']:
-                best = sim_score
+            if score[1] < best[1]:
+                best = score  # min value
+
     return best
+
 
 def remove_empty_boxes():
     for i in boxes:
@@ -114,7 +120,7 @@ def adding_turn(event,box):
         game_play('O',box)
         
 def game_play(value,box):
-    global l3,turn
+    global l3,turn,num_of_turn
     
     if value not in ['X','O']:
         value_1 = value.char.upper()
@@ -123,7 +129,8 @@ def game_play(value,box):
     
     box.insert(0,value_1)
     box.config(state='disabled')
-    remove_empty_boxes()
+    num_of_turn += 1
+    
     if not validate_input_entry(value_1):
         return None
     # Changes the label to show which player/computer turn it is
@@ -145,12 +152,13 @@ def game_play(value,box):
                 break
     elif mode.get() =='Computer Hard':
         turn = not turn
-        ans = minimax([j.get() for i in boxes for j in i],False)
-        if ans['position'] is not None:
-            box = boxes[ans['position']//3][ans['position']%3]
-            box.insert(0,"O")
-            box.config(state='disabled')
-            
+        num_empty_squares = len(['' for i in boxes for j in i if j.get() == ''])
+        ans = minimax([j.get() for i in boxes for j in i],num_empty_squares,False)
+        box = boxes[ans[0]//3][ans[0]%3]
+        box.insert(0,"O")
+        box.config(state='disabled')
+
+    
     turn = not turn      
     win = wining_condition([j.get() for i in boxes for j in i])
     if win == 'Tie':
@@ -159,7 +167,11 @@ def game_play(value,box):
                 j.config(state='disabled')
         l1 = Label(root, text=f"It's a Tie ", fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
         l1.grid(row=0, column=0, columnspan=15,sticky=W+E)
+        
     elif win is not False:
+        for i in  boxes:
+            for j in i:
+                j.config(state='disabled')
         num = 0 if win == 'X' else 1
         l1 = Label(root, text=f'Congratulation {players[mode.get()][num]} won the game', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
         l1.grid(row=0, column=0, columnspan=15,sticky=W+E)
@@ -167,7 +179,7 @@ def game_play(value,box):
 
 vcmd = (root.register(validate_input_entry), '%P')
 boxes = []
-players = {'PvP':('Player 1', 'Player 2'),"Computer Easy":('Player', 'Computer'),"Computer Hard":('Player', 'Computer')}
+players = {'PvP':('Player 1', 'Player 2'),"Computer Easy":('Player', 'Computer'),"Computer Hard":('Player', 'Computer'),"Computer Impossible":('Player', 'Computer')}
 turn = False
 
 l1 = Label(root, text='TIC TAC TOE', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '40'), bd=3, relief='solid',justify='center')
@@ -176,7 +188,7 @@ l1.grid(row=0, column=0, columnspan=15,sticky=W+E)
 l2 = Label(root, text='Game Mode---->', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '12'), bd=3, relief='solid',justify='center')
 l2.grid(row=1, column=0,columnspan=2)
 mode = StringVar()
-options_list = ["PvP", "Computer Easy", "Computer Hard"] 
+options_list = ["PvP", "Computer Easy", "Computer Hard","Computer Impossible"] 
 mode.set('Computer Hard')
 o1 = OptionMenu(root,mode,*options_list,command=new_game)
 o1.grid(row=1,column=2,columnspan=3) 
@@ -211,3 +223,17 @@ for i in range(2,18):
         Label(root, text='|', fg=FONT_COLOR, bg=BACKGROUND_COLOR ,font=('Times', '15'), bd=3, relief='flat',justify='center').grid(row=i, column=9)
     
 mainloop()
+'''    elif mode.get() == "Computer Impossible":
+        turn = not turn
+        if num_of_turn == 1:
+            for i in [boxes[0][0],boxes[0][2],boxes[2][0],boxes[2][2]]:
+                if i.get() == 'X':
+                    box = boxes[1][1]
+                    box.insert(0,"O")
+                    box.config(state='disabled')
+        else:
+            ans = minimax([j.get() for i in boxes for j in i],False)
+            if ans['position'] is not None:
+                box = boxes[ans['position']//3][ans['position']%3]
+                box.insert(0,"O")
+                box.config(state='disabled')'''

@@ -25,12 +25,10 @@ DNA = [
 
 color_codes = {
     'R': "\033[31m",           #red
-    'O': "\033[38;5;208m",     #orange
     'Y': "\033[33m",           #yellow 
     'G': "\033[32m",           #green
     'B': "\033[34m",           #blue
     'I': "\033[38;5;54m",      #indigo
-    'V': "\033[38;5;128m",     #violet
     "reset": "\033[0m"
 }
     
@@ -58,7 +56,7 @@ try:
                 color_combo = ['R','B']
             elif randomSelection == 4:
                 leftNucleotide, rightNucleotide = 'G', 'C'
-                color_combo = ['R','B']
+                color_combo = ['B','R']
             dna = DNA[index].format(leftNucleotide, rightNucleotide)
             inital = 0
             num = 0 

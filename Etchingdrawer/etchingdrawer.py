@@ -16,7 +16,64 @@ UP_DOWN_LEFT_CHAR    = chr(9508)  # Character 9508 is '┤'
 DOWN_LEFT_RIGHT_CHAR = chr(9516)  # Character 9516 is '┬'
 UP_LEFT_RIGHT_CHAR   = chr(9524)  # Character 9524 is '┴'
 CROSS_CHAR           = chr(9532)  # Character 9532 is '┼'
+
+def get_direction(x,y):
+    if y-1 < 0 : 
+        if screen[y-1][x] == '':
+            up = False
+        else:
+            up = True 
+    else: 
+        up = False
+    
+    if y+1 > y_screen :
+        if screen[y+1][x] == '':
+            down = False
+        else:
+            down = True
+    else: 
+        down = False
+    
+    if x-1 < 0 : 
+        if screen[y][x-1] == '':
+            left = False
+        else:
+            left = True
+    else: 
+        left = False
+    
+    if x+1 > x_screen :
+        if screen[y][x+1] == '':
+            right = True
+        else:
+            right = True
+    else:
+        right = False
+    
+    return [up,down,left,right]
+    
+def get_character(x,y):
+    direction = get_direction(x,y)
+    up,down,left,right = direction
+    
+    #For 3 Directional 
+    if False not in direction:
+        return CROSS_CHAR
+    elif False not in direction[:2]:
+        return UP_DOWN_LEFT_CHAR
+    elif False not in direction[:1]+direction[3]:
+        return UP_DOWN_RIGHT_CHAR
+    elif False not in direction[1:]:
+        return DOWN_LEFT_RIGHT_CHAR
+    elif False not in direction[0] + direction[2:]:
+        return UP_LEFT_RIGHT_CHAR
+    
+    if False not in [up,down]:
+        return UP_DOWN_CHAR
+    
         
+    
+ 
 @wrapper
 def main(stdscr):
     stdscr.clear()
@@ -27,18 +84,18 @@ def main(stdscr):
     stdscr.addstr(y,x,'-')
     while True:
         try:    
-            try:
-                ch = stdscr.getkey()
-            except curses.error:
-                ch = None
-            if ch == 'KEY_LEFT':
-                screen[y][x] = '_'
+            ch = stdscr.getkey().lower()
+            if ch == 'w':
                 x -= 1
-                stdscr.addstr(y,x,'_')
+                if screen[y][x] !=  '':
+                    get_character(x,y)
+                else:
+                    screen[y][x] = LEFT_RIGHT_CHAR
+                    stdscr.addstr(y,x,LEFT_RIGHT_CHAR)
             elif ch == 'KEY_RIGHT':
-                screen[y][x] = '_'
+                screen[y][x] = LEFT_RIGHT_CHAR
                 x += 1
-                stdscr.addstr(y,x,'_')
+                stdscr.addstr(y,x,LEFT_RIGHT_CHAR)
             elif ch == 'KEY_UP':
                 screen[y][x] = '|'
                 y -= 1
